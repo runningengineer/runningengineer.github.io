@@ -425,6 +425,10 @@ body.gender-W .rcount .rcn{color:var(--wc);}
 <script>
 /* ======== DATA ======== */
 const MEN = {
+"2:20":{n:39,po:199.9,p1:195.0,p2:197.5,p3:204.5,p4:205.7,d1:-2.48,d2:-1.22,d3:2.26,d4:2.86,s1:-5.0,s2:-2.4,s3:4.5,s4:5.7,h1:4139,h2:4297,ps:158,neg:5.1,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
+"2:25":{n:102,po:206.4,p1:200.7,p2:203.2,p3:211.1,p4:214.8,d1:-2.8,d2:-1.58,d3:2.26,d4:4.04,s1:-5.8,s2:-3.3,s3:4.7,s4:8.3,h1:4258,h2:4453,ps:195,neg:8.8,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
+"2:30":{n:260,po:213.9,p1:208.6,p2:210.6,p3:218.8,p4:221.1,d1:-2.46,d2:-1.52,d3:2.31,d4:3.39,s1:-5.3,s2:-3.3,s3:4.9,s4:7.2,h1:4419,h2:4605,ps:186,neg:10.4,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
+"2:35":{n:506,po:220.7,p1:215.4,p2:217.3,p3:225.6,p4:228.3,d1:-2.39,d2:-1.54,d3:2.22,d4:3.45,s1:-5.3,s2:-3.4,s3:4.9,s4:7.6,h1:4561,h2:4750,ps:189,neg:12.8,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
 "2:40":{n:769,po:227.7,p1:223.1,p2:224.2,p3:232.8,p4:234.3,d1:-2.03,d2:-1.53,d3:2.24,d4:2.9,s1:-4.6,s2:-3.5,s3:5.1,s4:6.6,h1:4714,h2:4893,ps:179,neg:16.3,age:{"18-29":3.81,"30-39":2.38,"40-49":2.56,"50-59":null,"60+":null}},
 "2:45":{n:1265,po:234.9,p1:230.2,p2:231.0,p3:240.4,p4:241.8,d1:-1.99,d2:-1.66,d3:2.33,d4:2.97,s1:-4.7,s2:-3.9,s3:5.5,s4:7.0,h1:4861,h2:5050,ps:189,neg:15.7,age:{"18-29":3.2,"30-39":2.77,"40-49":3.08,"50-59":2.67,"60+":null}},
 "2:50":{n:1627,po:241.8,p1:236.5,p2:237.6,p3:247.9,p4:249.3,d1:-2.17,d2:-1.73,d3:2.52,d4:3.13,s1:-5.3,s2:-4.2,s3:6.1,s4:7.6,h1:4995,h2:5206,ps:211,neg:15.4,age:{"18-29":4.13,"30-39":2.95,"40-49":2.6,"50-59":2.45,"60+":null}},
@@ -471,6 +475,10 @@ const WOMEN = {
 };
 
 const NOTES_EN_M = {
+"2:20":"Near-elite bucket (n=39, 2023+2025). Extremely small sample — treat with caution. Average positive split 2:38, the lowest of any group. Pacing profile is remarkably controlled: Seg.4 deviation of just +2.86%, the best of any men\'s bucket.",
+"2:25":"Sub-elite (n=102). Positive split avg 3:15. These runners show a low and consistent deviation across all segments. Very few start the first downhill recklessly.",
+"2:30":"Strong amateur elite (n=260). Positive split avg 3:06 — impressively even. Seg.4 deviation +3.39%, nearly as controlled as the 2:40 bucket. Experience and fitness both high.",
+"2:35":"Amateur elite (n=506). Positive split avg 3:09. Excellent control of the first 10K (−5.3 sec/km). The Newton Hills cost just +4.9 sec/km — the best hill management of any bucket below 2:40.",
 "2:40":"Elite bucket (n=769). The downhill gives +4.6 sec/km advantage that burns quads. Average positive split: 2:59. Only 16% go negative. Target: cross halfway in 1:18:34.",
 "2:45":"Sub-elite (n=1265). Positive split avg 3:09. Focus on Seg.2 consistency. Newton Hills cost +5.5 sec/km vs your average.",
 "2:50":"Positive split avg 3:31. Ideal halfway ~1:23:15. The downhill pulls you to ~3:56/km — resist. Seg.4 costs everyone +7.6 sec/km.",
@@ -494,6 +502,10 @@ const NOTES_EN_M = {
 "5:00":"Positive split avg 25:05. Seg.3 deviation reaches +45.4 sec/km. A disciplined first half can save your finish."
 };
 const NOTES_IT_M = {
+"2:20":"Fascia quasi-élite (n=39, 2023+2025). Campione molto piccolo — usare con cautela. Positive split medio di 2:38, il più basso di tutti i gruppi. Profilo di passo notevolmente controllato: deviazione Seg.4 di solo +2.86%.",
+"2:25":"Sub-élite (n=102). Positive split medio 3:15. Questi runner mostrano una deviazione bassa e costante in tutti i segmenti. Pochissimi partono troppo forte nella discesa iniziale.",
+"2:30":"Élite amatoriale forte (n=260). Positive split medio 3:06 — notevolmente uniforme. Deviazione Seg.4 +3.39%, quasi al livello della fascia 2:40. Esperienza e forma fisica entrambe elevate.",
+"2:35":"Élite amatoriale (n=506). Positive split medio 3:09. Ottimo controllo dei primi 10K (−5.3 sec/km). Le Newton Hills costano solo +4.9 sec/km — la migliore gestione delle colline di qualsiasi fascia sotto le 2:40.",
 "2:40":"Fascia élite (n=769). La discesa dona +4.6 sec/km ma brucia i quad. Positive split medio: 2:59. Solo il 16% fa negative split. Target: mezza in 1:18:34.",
 "2:45":"Sub-élite (n=1265). Positive split medio 3:09. Concentrati sulla consistenza nel Seg.2. Le Newton Hills costano +5.5 sec/km.",
 "2:50":"Positive split medio 3:31. Mezza ideale ~1:23:15. La discesa ti porta a ~3:56/km — resisti. Il Seg.4 costerà +7.6 sec/km a tutti.",
@@ -561,7 +573,7 @@ const NOTES_IT_W = {
 "5:00":"Positive split medio 18:12. Qualsiasi arrivo su Boylston è una vittoria. Corri intelligente, mangia bene, goditi ogni miglio."
 };
 
-const MCOLS_M = {"2:40":"#3498db","2:45":"#2ecc71","2:50":"#27ae60","2:55":"#f39c12","3:00":"#e67e22","3:05":"#d35400","3:10":"#e74c3c","3:15":"#c0392b","3:20":"#9b59b6","3:25":"#8e44ad","3:30":"#e91e8c","3:35":"#ad1457","3:40":"#1abc9c","3:45":"#16a085","3:50":"#3498db","3:55":"#2980b9","4:00":"#888","4:15":"#666","4:30":"#555","4:45":"#444","5:00":"#333"};
+const MCOLS_M = {"2:20":"#a29bfe","2:25":"#6c5ce7","2:30":"#fd79a8","2:35":"#e84393","2:40":"#3498db","2:45":"#2ecc71","2:50":"#27ae60","2:55":"#f39c12","3:00":"#e67e22","3:05":"#d35400","3:10":"#e74c3c","3:15":"#c0392b","3:20":"#9b59b6","3:25":"#8e44ad","3:30":"#e91e8c","3:35":"#ad1457","3:40":"#1abc9c","3:45":"#16a085","3:50":"#3498db","3:55":"#2980b9","4:00":"#888","4:15":"#666","4:30":"#555","4:45":"#444","5:00":"#333"};
 const MCOLS_W = {"2:55":"#ff85b3","3:00":"#e91e8c","3:05":"#d81b60","3:10":"#c2185b","3:15":"#ad1457","3:20":"#9c27b0","3:25":"#7b1fa2","3:30":"#6a1b9a","3:35":"#4a148c","3:40":"#3f51b5","3:45":"#283593","3:50":"#1565c0","3:55":"#0d47a1","4:00":"#01579b","4:05":"#006064","4:10":"#004d40","4:15":"#1b5e20","4:30":"#558b2f","4:45":"#827717","5:00":"#555"};
 
 const SEGS = [
