@@ -3,31 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Boston Marathon — Pace Engineering Analysis | @runningengineer</title>
+<title>How Runners Race Boston | @runningengineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 :root{
-  --bg:#080808;--bg2:#111;--bg3:#191919;--bg4:#222;
+  --bg:#080808;--bg2:#111;--bg3:#1a1a1a;
   --br:rgba(255,255,255,.07);--br2:rgba(255,255,255,.14);
-  --tx:#efefef;--mu:#777;--mu2:#3a3a3a;
-  --ac:#FF5C28;--ac2:#ff8a5c;
-  --s1:#2ecc71;--s2:#3498db;--s3:#e74c3c;--s4:#f39c12;
-  --wc:#e91e8c;--mc:#3498db;
+  --tx:#f0f0f0;--mu:#777;--mu2:#3a3a3a;
+  --ac:#FF5C28;--s1:#2ecc71;--s2:#3498db;--s3:#e74c3c;--s4:#f39c12;
+  --cex:#2ecc71;--cfa:#f39c12;--cbl:#e74c3c;--wc:#e91e8c;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--tx);font-family:'Barlow',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;}
-h1,h2,h3,h4,h5{font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:-.02em;}
+h1,h2,h3,h4{font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:-.02em;}
 .lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--mu);}
 
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:54px;background:rgba(8,8,8,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--br);}
-.nav-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx);text-decoration:none;white-space:nowrap;}
+.nav-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx);text-decoration:none;}
 .nav-brand span{color:var(--ac);}
-.nav-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.nav-links{display:flex;gap:1.25rem;}
+.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.nav-links{display:flex;gap:1.2rem;}
 .nav-links a{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:600;transition:color .2s;}
 .nav-links a:hover{color:var(--tx);}
 .tg{display:flex;border:1px solid var(--br2);border-radius:3px;overflow:hidden;}
@@ -35,142 +33,130 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;align-items:cen
 .tb:last-child{border-right:none;}
 .tb:hover{color:var(--tx);}
 .tb.active{background:var(--ac);color:#fff;}
-.tb.active-g{background:var(--ac);color:#fff;}
 
-/* HERO */
-.hero{min-height:auto;display:flex;flex-direction:column;justify-content:flex-end;padding:2rem 1.5rem;padding-top:72px;padding-bottom:3rem;position:relative;overflow:hidden;}
-.hbg{position:absolute;inset:0;}
-.hbg::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,92,40,.022) 0,rgba(255,92,40,.022) 1px,transparent 1px,transparent 80px),repeating-linear-gradient(0,rgba(255,92,40,.022) 0,rgba(255,92,40,.022) 1px,transparent 1px,transparent 80px);}
-.helev{position:absolute;bottom:0;left:0;right:0;height:180px;opacity:.18;}
-.hc{position:relative;z-index:1;max-width:1200px;margin:0 auto;width:100%;}
+.hero{padding:5rem 1.5rem 3rem;max-width:1200px;margin:0 auto;}
 .eyebrow{display:flex;align-items:center;gap:.9rem;margin-bottom:1.25rem;}
 .eline{width:36px;height:2px;background:var(--ac);}
-.display{font-size:clamp(3.2rem,7.5vw,6.5rem);line-height:.88;text-transform:uppercase;}
-.display .ac{color:var(--ac);display:block;}
-.hsub{font-size:1rem;color:var(--mu);max-width:480px;margin-bottom:2rem;}
+.display{font-size:clamp(2.8rem,6vw,5.5rem);line-height:.9;text-transform:uppercase;margin-bottom:1.25rem;}
+.display .ac{color:var(--ac);}
+.display .sm{font-size:clamp(1.4rem,2.5vw,2.4rem);display:block;margin-top:.35rem;opacity:.7;}
+.hero-sub{font-size:.92rem;color:var(--mu);max-width:580px;margin-bottom:2rem;line-height:1.7;}
+.hero-meta{font-size:.75rem;color:var(--mu2);margin-top:1rem;max-width:600px;line-height:1.6;}
 .hstats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--br);border:1px solid var(--br);max-width:640px;}
-.hs{background:var(--bg);padding:1.1rem 1.25rem;}
-.hs .num{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:700;color:var(--ac);line-height:1;}
+.hs{background:var(--bg2);padding:1rem 1.25rem;}
+.hs .num{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:700;color:var(--ac);line-height:1;}
 .hs .desc{font-size:10px;color:var(--mu);margin-top:3px;letter-spacing:.05em;text-transform:uppercase;}
 
-/* LAYOUT */
-section{padding:5rem 1.5rem;max-width:1200px;margin:0 auto;}
-.sf{padding:5rem 0;}
+section{padding:4.5rem 1.5rem;max-width:1200px;margin:0 auto;}
+.sf{padding:4.5rem 0;}
 .inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;}
-.sh{margin-bottom:2.5rem;}
-.sh h2{font-size:clamp(1.9rem,3.5vw,3rem);text-transform:uppercase;margin-bottom:.35rem;}
-.sh p{color:var(--mu);max-width:520px;font-size:.92rem;}
+.sh{margin-bottom:2.25rem;}
+.sh h2{font-size:clamp(1.8rem,3.2vw,2.8rem);text-transform:uppercase;margin-bottom:.35rem;}
+.sh p{color:var(--mu);max-width:560px;font-size:.9rem;}
 .div{width:100%;height:1px;background:var(--br);}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:1.75rem;}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--br);border:1px solid var(--br);}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--br);border:1px solid var(--br);}
 
-/* SEGMENT CARDS */
-.sc{background:var(--bg2);padding:1.6rem 1.4rem;position:relative;overflow:hidden;}
+.sc{background:var(--bg2);padding:1.5rem 1.3rem;position:relative;overflow:hidden;}
 .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
 .s1b::before{background:var(--s1);}.s2b::before{background:var(--s2);}.s3b::before{background:var(--s3);}.s4b::before{background:var(--s4);}
-.sbg{font-family:'Barlow Condensed',sans-serif;font-size:4.5rem;font-weight:900;opacity:.05;position:absolute;top:.4rem;right:.6rem;line-height:1;}
-.stag{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.45rem;}
+.sbg{font-family:'Barlow Condensed',sans-serif;font-size:4rem;font-weight:900;opacity:.05;position:absolute;top:.4rem;right:.6rem;line-height:1;}
+.stag{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.4rem;}
 .stag.s1{color:var(--s1);}.stag.s2{color:var(--s2);}.stag.s3{color:var(--s3);}.stag.s4{color:var(--s4);}
-.stitle{font-size:1.25rem;font-weight:900;text-transform:uppercase;margin-bottom:.35rem;}
-.sdist{font-size:.82rem;color:var(--mu);margin-bottom:.65rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.03em;}
-.sdesc{font-size:.8rem;color:var(--mu);line-height:1.55;}
-.bdg{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;padding:2px 6px;border:1px solid;display:inline-block;margin-bottom:.6rem;margin-right:4px;}
+.stitle{font-size:1.2rem;font-weight:900;text-transform:uppercase;margin-bottom:.3rem;}
+.sdist{font-size:.8rem;color:var(--mu);margin-bottom:.5rem;font-family:'Barlow Condensed',sans-serif;}
+.sdesc{font-size:.78rem;color:var(--mu);line-height:1.55;}
+.bdg{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;padding:2px 6px;border:1px solid;display:inline-block;margin-bottom:.5rem;}
 
-/* CHEAT SHEET */
-.cbg{background:var(--bg2);}
-.bbar{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--br2);width:fit-content;margin-bottom:1.75rem;}
-.bbt{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.03em;padding:.5rem 1.1rem;background:transparent;color:var(--mu);border:none;cursor:pointer;transition:all .15s;text-transform:uppercase;border-right:1px solid var(--br2);}
+.dash-bg{background:var(--bg2);}
+.bbar{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--br2);width:fit-content;margin-bottom:1.5rem;}
+.bbt{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.03em;padding:.42rem .9rem;background:transparent;color:var(--mu);border:none;cursor:pointer;transition:all .15s;text-transform:uppercase;border-right:1px solid var(--br2);}
 .bbt:last-child{border-right:none;}
 .bbt:hover{background:var(--bg3);color:var(--tx);}
 .bbt.active{background:var(--ac);color:#fff;}
-.s4g{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--br);border:1px solid var(--br);margin-bottom:1.75rem;}
-.sb2{background:var(--bg3);padding:1rem 1.1rem;}
-.sb2 .val{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.2rem;}
-.sb2 .lbl2{font-size:10px;color:var(--mu);letter-spacing:.05em;text-transform:uppercase;}
-.cpg{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--br);border:1px solid var(--br);}
+.rcount{display:inline-flex;align-items:center;gap:.5rem;background:var(--bg3);border:1px solid var(--br2);padding:.28rem .85rem;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:600;color:var(--mu);margin-bottom:1.5rem;}
+.rcount .rcn{font-size:1rem;color:var(--ac);font-weight:700;}
+
+.groups3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--br);border:1px solid var(--br);margin-bottom:1.75rem;}
+.gc{background:var(--bg3);padding:1.25rem 1.1rem;position:relative;}
+.gc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.gc.ex::before{background:var(--cex);}.gc.fa::before{background:var(--cfa);}.gc.bl::before{background:var(--cbl);}
+.gc-pct{font-family:'Barlow Condensed',sans-serif;font-size:2.4rem;font-weight:700;line-height:1;margin-bottom:.25rem;}
+.gc-pct.ex{color:var(--cex);}.gc-pct.fa{color:var(--cfa);}.gc-pct.bl{color:var(--cbl);}
+.gc-tag{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.3rem;}
+.gc-tag.ex{color:var(--cex);}.gc-tag.fa{color:var(--cfa);}.gc-tag.bl{color:var(--cbl);}
+
+.tab-nav{display:flex;gap:0;border-bottom:1px solid var(--br);margin-bottom:1.75rem;}
+.tn{border:none;background:transparent;color:var(--mu);padding:.6rem 1.1rem;cursor:pointer;font-size:.8rem;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Barlow',sans-serif;transition:all .15s;}
+.tn:hover{color:var(--tx);}
+.tn.active{color:var(--tx);border-bottom-color:var(--ac);}
+.tp{display:none;}.tp.active{display:block;}
+
+.cf{background:var(--bg2);border:1px solid var(--br);padding:1.4rem;margin-bottom:1.5rem;}
+.cf:last-child{margin-bottom:0;}
+.cf h3{font-size:.9rem;text-transform:uppercase;margin-bottom:.2rem;}
+.cf .cs{font-size:10px;color:var(--mu);margin-bottom:1rem;}
+.cw{position:relative;width:100%;}
+.leg{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:.65rem;}
+.li{display:flex;align-items:center;gap:.3rem;font-size:10px;color:var(--mu);font-family:'Barlow Condensed',sans-serif;font-weight:600;}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+
+/* strategy tab */
 .cp{background:var(--bg3);padding:.8rem .65rem;text-align:center;}
 .cpk{font-size:10px;color:var(--mu);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.22rem;}
 .cpt{font-family:'Barlow Condensed',sans-serif;font-size:1.35rem;font-weight:700;}
 .cps{font-size:9px;color:var(--mu2);margin-top:.18rem;}
-.c2{display:grid;grid-template-columns:1fr 1fr;gap:1.75rem;margin-top:1.75rem;}
-.stbl{width:100%;border-collapse:collapse;}
-.stbl th{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);padding:.6rem .8rem;border-bottom:1px solid var(--br);text-align:left;}
-.stbl td{padding:.7rem .8rem;border-bottom:1px solid var(--br);font-size:.85rem;}
-.stbl tr:last-child td{border-bottom:none;}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle;}
-.pos{color:#e74c3c;font-weight:500;}.neg{color:#2ecc71;font-weight:500;}
-.note{background:var(--bg3);border:1px solid var(--br);padding:1rem 1.2rem;font-size:.82rem;color:var(--mu);line-height:1.65;margin-top:.9rem;display:flex;gap:.65rem;}
+.sb{background:var(--bg3);padding:.9rem 1rem;}
+.sb .val{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:700;line-height:1;margin-bottom:.2rem;}
+.sb .lbl2{font-size:10px;color:var(--mu);letter-spacing:.05em;text-transform:uppercase;}
+.strat-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.strat-table th{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);padding:.6rem .8rem;border-bottom:1px solid var(--br);text-align:left;}
+.strat-table td{padding:.75rem .8rem;border-bottom:1px solid var(--br);vertical-align:middle;}
+.strat-table tr:last-child td{border-bottom:none;}
+.group-pace{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;}
+.delta{font-size:.75rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;display:block;margin-top:1px;}
+.seg-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+
+.note{background:var(--bg3);border-left:3px solid var(--ac);padding:.9rem 1.1rem;font-size:.82rem;color:var(--mu);line-height:1.65;}
 .note strong{color:var(--tx);}
 
-/* RUNNER COUNT BADGE */
-.rcount{display:inline-flex;align-items:center;gap:.4rem;background:var(--bg3);border:1px solid var(--br2);padding:.3rem .8rem;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:600;color:var(--mu);margin-bottom:1.5rem;}
-.rcount .rcn{font-size:1.1rem;color:var(--ac);font-weight:700;}
+.insights{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--br);border:1px solid var(--br);margin-top:2rem;}
+.ic{background:var(--bg2);padding:1.5rem;}
+.ic .inum{font-family:'Barlow Condensed',sans-serif;font-size:2.8rem;font-weight:900;color:var(--ac);line-height:1;margin-bottom:.3rem;}
+.ic h4{font-size:.9rem;text-transform:uppercase;margin-bottom:.3rem;}
+.ic p{font-size:.8rem;color:var(--mu);line-height:1.6;}
 
-/* CHARTS */
-.cc{background:var(--bg2);border:1px solid var(--br);padding:1.5rem;}
-.cc h3{font-size:.95rem;text-transform:uppercase;margin-bottom:.2rem;}
-.cc .cs{font-size:11px;color:var(--mu);margin-bottom:1.1rem;}
-.cf{background:var(--bg2);border:1px solid var(--br);padding:1.5rem;margin-bottom:1.6rem;}
-.cf h3{font-size:.95rem;text-transform:uppercase;margin-bottom:.2rem;}
-.cf .cs{font-size:11px;color:var(--mu);margin-bottom:1.1rem;}
-.cw{position:relative;width:100%;}
-.leg{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:.75rem;}
-.li{display:flex;align-items:center;gap:.3rem;font-size:10px;color:var(--mu);font-family:'Barlow Condensed',sans-serif;font-weight:600;}
-.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
-
-/* INSIGHTS */
-.ins{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--br);border:1px solid var(--br);margin-top:2.5rem;}
-.ic{background:var(--bg2);padding:1.6rem;}
-.ic .inum{font-family:'Barlow Condensed',sans-serif;font-size:3rem;font-weight:900;color:var(--ac);line-height:1;margin-bottom:.35rem;}
-.ic h4{font-size:.95rem;text-transform:uppercase;margin-bottom:.35rem;}
-.ic p{font-size:.82rem;color:var(--mu);line-height:1.6;}
-
-/* ABOUT */
 .about-bg{background:var(--bg2);border-top:1px solid var(--br);}
-.about-grid{display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:start;}
-.avatar{width:96px;height:96px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--br2);object-fit:cover;}
-.about-name{font-size:clamp(1.6rem,3vw,2.5rem);text-transform:uppercase;margin-bottom:.25rem;}
-.about-handle{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;color:var(--mu);letter-spacing:.05em;margin-bottom:1rem;}
+.about-grid{display:grid;grid-template-columns:auto 1fr;gap:2.5rem;align-items:start;}
+.avatar{width:88px;height:88px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--br2);display:block;}
+.about-name{font-size:clamp(1.5rem,3vw,2.2rem);text-transform:uppercase;margin-bottom:.2rem;}
+.about-handle{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;color:var(--mu);letter-spacing:.05em;margin-bottom:.9rem;}
 .about-handle span{color:var(--ac);}
-.about-bio{font-size:.9rem;color:var(--mu);line-height:1.75;max-width:640px;margin-bottom:1.5rem;}
-.yt-links{display:flex;gap:1rem;flex-wrap:wrap;}
-.yt-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.1rem;border:1px solid var(--br2);font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;color:var(--tx);transition:all .2s;}
+.about-bio{font-size:.88rem;color:var(--mu);line-height:1.75;max-width:620px;margin-bottom:1.25rem;}
+.yt-links{display:flex;gap:.75rem;flex-wrap:wrap;}
+.yt-btn{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem 1rem;border:1px solid var(--br2);font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;color:var(--tx);transition:all .2s;}
 .yt-btn:hover{border-color:var(--ac);color:var(--ac);}
-.yt-btn .yt-icon{width:18px;height:18px;background:#e74c3c;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.yt-btn .yt-icon::after{content:'';width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid white;margin-left:2px;}
-.stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--br);border:1px solid var(--br);margin-top:2rem;}
-.ss{background:var(--bg3);padding:.9rem 1.1rem;text-align:center;}
-.ss .sv{font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:700;color:var(--ac);}
-.ss .sl{font-size:10px;color:var(--mu);letter-spacing:.05em;text-transform:uppercase;margin-top:2px;}
+.yt-icon{width:16px;height:16px;background:#e74c3c;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.yt-icon::after{content:'';width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:7px solid white;margin-left:2px;}
 
-/* FOOTER */
-footer{border-top:1px solid var(--br);padding:2.5rem 1.5rem;display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;}
-.fb{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+footer{border-top:1px solid var(--br);padding:2rem 1.5rem;display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;}
+.fb{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
 .fb span{color:var(--ac);}
 .fm{font-size:11px;color:var(--mu);text-align:right;line-height:1.8;}
 
-@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.fu{animation:fu .5s ease both;}
-.fu2{animation:fu .5s .1s ease both;}
-.fu3{animation:fu .5s .2s ease both;}
-
-/* IMPERIAL */
-body.imperial .mk{display:none!important;}body.imperial .ik{display:inline!important;}
+body.imperial .mk{display:none!important;}
+body.imperial .ik{display:inline!important;}
 .ik{display:none;}
-
-/* GENDER COLORS */
 body.gender-W .bbt.active{background:var(--wc);}
-body.gender-W .rcount .rcn{color:var(--wc);}
 
 @media(max-width:800px){
-  .hstats,.g4,.g3,.s4g,.cpg{grid-template-columns:repeat(2,1fr);}
-  .g2,.c2,.ins,.about-grid{grid-template-columns:1fr;}
-  .about-grid{gap:1.5rem;}
-  footer{flex-direction:column;gap:.75rem;}.fm{text-align:left;}
-  .nav-links{display:none;}
-  .nav-right{gap:6px;}
+  .hstats,.g4,.groups3{grid-template-columns:repeat(2,1fr);}
+  .g2,.insights,.about-grid{grid-template-columns:1fr;}
+  .about-grid{gap:1.25rem;}
+  footer{flex-direction:column;gap:.75rem;} .fm{text-align:left;}
+  .nav-links{display:none;} .nav-right{gap:5px;}
   .tb{padding:.25rem .55rem;font-size:10px;}
+  .strat-right{display:none;}
 }
 </style>
 </head>
@@ -181,8 +167,8 @@ body.gender-W .rcount .rcn{color:var(--wc);}
   <div class="nav-right">
     <div class="nav-links">
       <a href="#course" data-en="Course" data-it="Percorso">Course</a>
-      <a href="#cheatsheet" data-en="Cheat Sheet" data-it="Cheat Sheet">Cheat Sheet</a>
-      <a href="#analysis" data-en="Analysis" data-it="Analisi">Analysis</a>
+      <a href="#dashboard" data-en="Analysis" data-it="Analisi">Analysis</a>
+      <a href="#insights" data-en="Insights" data-it="Insights">Insights</a>
       <a href="#about" data-en="About" data-it="Chi sono">About</a>
     </div>
     <div class="tg">
@@ -200,158 +186,240 @@ body.gender-W .rcount .rcn{color:var(--wc);}
   </div>
 </nav>
 
+<!-- HERO -->
 <div class="hero">
-  <div class="hbg">
-    <svg class="helev" viewBox="0 0 1200 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="eg" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#2ecc71"/><stop offset="23%" stop-color="#3498db"/>
-        <stop offset="57%" stop-color="#e74c3c"/><stop offset="100%" stop-color="#f39c12"/>
-      </linearGradient></defs>
-      <polygon points="0,180 0,75 280,28 670,28 670,8 830,8 830,85 870,108 910,85 950,95 980,55 1020,55 1020,90 1200,55 1200,180" fill="url(#eg)"/>
-      <polyline points="0,75 280,28 670,28 670,8 830,8 830,85 870,108 910,85 950,95 980,55 1020,55 1020,90 1200,55" fill="none" stroke="white" stroke-width="1.5" opacity=".3"/>
-      <text x="100" y="18" fill="#2ecc71" font-family="Barlow Condensed" font-size="9" font-weight="700" opacity=".65">SEG.1 — DOWNHILL</text>
-      <text x="400" y="18" fill="#3498db" font-family="Barlow Condensed" font-size="9" font-weight="700" opacity=".65">SEG.2 — FLAT</text>
-      <text x="710" y="40" fill="#e74c3c" font-family="Barlow Condensed" font-size="9" font-weight="700" opacity=".65">SEG.3 — NEWTON HILLS</text>
-      <text x="1035" y="40" fill="#f39c12" font-family="Barlow Condensed" font-size="9" font-weight="700" opacity=".65">SEG.4</text>
-    </svg>
+  <div class="eyebrow"><div class="eline"></div>
+    <span class="lbl" data-en="Data analysis — Boston Marathon 2023+2025" data-it="Analisi dati — Boston Marathon 2023+2025">Data analysis — Boston Marathon 2023+2025</span>
   </div>
-  <div class="hc">
-    <div class="eyebrow fu"><div class="eline"></div><span class="lbl" data-en="Engineering Analysis — Boston Marathon 2023+2025" data-it="Analisi Ingegneristica — Boston Marathon 2023+2025">Engineering Analysis — Boston Marathon 2023+2025</span></div>
-    <h1 class="display fu2"><span data-en="How to race" data-it="Come correre">How to race</span><span class="ac">Boston</span></h1>
-    <p class="hsub fu3" data-en="Real data from 21,985 runners across 2 editions. Optimal pacing strategy by time bucket, segment, age, and gender. 2024 excluded (weather anomaly)." data-it="21.985 runner reali in 2 edizioni. Strategia ottimale per fascia di tempo, segmento, età e genere. 2024 escluso (meteo anomalo).">Real data from 21,985 runners across 2 editions. Optimal pacing strategy by time bucket, segment, age, and gender.</p>
-    <div class="hstats fu3">
-      <div class="hs"><div class="num">21,985</div><div class="desc" data-en="Runners (2023+2025)" data-it="Runner (2023+2025)">Runners (2023+2025)</div></div>
-      <div class="hs"><div class="num">17+21</div><div class="desc" data-en="Men + Women buckets" data-it="Fasce U + D">Men + Women buckets</div></div>
-      <div class="hs"><div class="num">2:40</div><div class="desc" data-en="Fastest bucket" data-it="Fascia più veloce">Fastest bucket</div></div>
-      <div class="hs"><div class="num">5:00</div><div class="desc" data-en="Slowest bucket" data-it="Fascia più lenta">Slowest bucket</div></div>
-    </div>
+  <h1 class="display">
+    <span data-en="How runners" data-it="Come i runner">How runners</span>
+    <span class="ac" data-en="actually race Boston" data-it="corrono davvero Boston">actually race Boston</span>
+    <span class="sm" data-en="— and why most of them get it wrong." data-it="— e perché la maggior parte sbaglia.">— and why most of them get it wrong.</span>
+  </h1>
+  <p class="hero-sub" data-en="Real split data from 21,985 runners (2023+2025), compared against grade-adjusted ideal pacing. Every runner classified: Executed, Faded, or Blew up. 2024 excluded (weather anomaly)." data-it="Dati di split reali da 21.985 runner (2023+2025), confrontati con il passo ideale grade-adjusted. Ogni runner classificato: Executed, Faded o Blowup. 2024 escluso (meteo anomalo).">Real split data from 21,985 runners (2023+2025), compared against grade-adjusted ideal pacing. Every runner classified: Executed, Faded, or Blew up.</p>
+  <div class="hstats">
+    <div class="hs"><div class="num">21,985</div><div class="desc" data-en="runners analyzed" data-it="runner analizzati">runners analyzed</div></div>
+    <div class="hs"><div class="num">3</div><div class="desc" data-en="groups per bucket" data-it="gruppi per fascia">groups per bucket</div></div>
+    <div class="hs"><div class="num">~33%</div><div class="desc" data-en="blow up every time" data-it="esplodono ogni volta">blow up every time</div></div>
+    <div class="hs"><div class="num">~33%</div><div class="desc" data-en="execute well" data-it="eseguono bene">execute well</div></div>
   </div>
+  <p class="hero-meta" data-en="Outliers removed (>15% single segment deviation). Median values. Groups: data-driven positive split tertiles per bucket. Ideal: grade-adjusted formula (13 sec/mi uphill, 8 sec/mi downhill per 1% grade)." data-it="Outlier rimossi (>15% deviazione su singolo segmento). Valori mediani. Gruppi da terzili del positive split data-driven. Pacing ideale: formula grade-adjusted Runners Connect.">Outliers removed. Median values. Groups: data-driven positive split tertiles. Ideal: grade-adjusted formula.</p>
 </div>
+<div class="div"></div>
+
+<!-- GROUP EXPLAINER -->
+<section>
+  <div class="sh">
+    <span class="lbl" data-en="The 4 reference lines" data-it="Le 4 linee di riferimento">The 4 reference lines</span>
+    <h2 data-en="Ideal, Executed, Faded, Blowup" data-it="Ideale, Executed, Faded, Blowup">Ideal, Executed, Faded, Blowup</h2>
+    <p data-en="Every chart in this analysis compares against these four benchmarks. Here is exactly what each one means." data-it="Ogni grafico in questa analisi confronta con questi quattro riferimenti. Ecco esattamente cosa significa ognuno.">Every chart compares against these four benchmarks. Here is exactly what each one means.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--br);border:1px solid var(--br)">
+
+    <div style="background:var(--bg2);padding:1.6rem 1.4rem;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#3498db"></div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:5rem;font-weight:900;opacity:.05;position:absolute;top:.25rem;right:.75rem;line-height:1">✦</div>
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#3498db;margin-bottom:.4rem" data-en="Ideal" data-it="Ideale">Ideal</p>
+      <p style="font-size:1.15rem;font-weight:900;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;margin-bottom:.5rem" data-en="The engineering target" data-it="Il target ingegneristico">The engineering target</p>
+      <p style="font-size:.82rem;color:var(--mu);line-height:1.65"
+        data-en="Not a group of runners — a mathematical benchmark. The grade-adjusted optimal pace for each segment, computed from the official Boston elevation profile. It answers: if you ran perfectly even effort across every foot of elevation change, what would your pace be in each segment? It is the baseline against which all three runner groups are measured. Running faster than ideal early means you are borrowing from later miles."
+        data-it="Non è un gruppo di runner — è un benchmark matematico. Il passo ottimale grade-adjusted per ogni segmento, calcolato dal profilo altimetrico ufficiale di Boston. Risponde a: se corri uno sforzo perfettamente uniforme su ogni metro di dislivello, qual è il tuo passo in ogni segmento? È la base di riferimento con cui tutti e tre i gruppi vengono misurati.">Not a group of runners — a mathematical benchmark. The grade-adjusted optimal pace per segment from the official Boston elevation profile. It answers: what would your pace be if you ran perfectly even effort across every elevation change? Running faster than ideal in Seg.1 means borrowing from later miles.</p>
+    </div>
+
+    <div style="background:var(--bg2);padding:1.6rem 1.4rem;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#2ecc71"></div>
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#2ecc71;margin-bottom:.4rem" data-en="Executed (~33%)" data-it="Executed (~33%)">Executed (~33%)</p>
+      <p style="font-size:1.15rem;font-weight:900;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;margin-bottom:.5rem" data-en="The best-paced third" data-it="Il terzo meglio gestito">The best-paced third</p>
+      <p style="font-size:.82rem;color:var(--mu);line-height:1.65"
+        data-en="The runners whose positive split falls in the bottom third for their bucket — meaning the smallest gap between first and second half. These are not necessarily the fastest runners in the bucket. They are the ones who best matched their ability to the course. A defining trait: executed runners go slower than the ideal in Seg.1. They do not take the free speed the downhill offers. That restraint is what buys them a strong Seg.4."
+        data-it="I runner il cui positive split cade nel terzo inferiore per la loro fascia — ovvero il minor gap tra prima e seconda metà. Non sono necessariamente i più veloci della fascia. Sono quelli che hanno meglio adeguato le proprie capacità al percorso. Un tratto distintivo: i runner executed vanno più lento dell'ideale nel Seg.1. Non sfruttano la velocità gratuita offerta dalla discesa. Quella disciplina gli guadagna un forte Seg.4.">Runners whose positive split falls in the bottom third of their bucket — smallest gap between first and second half. Not necessarily the fastest, but the best-matched to the course. Defining trait: they go <strong style="color:var(--tx)">slower than ideal in Seg.1</strong>. They refuse the free downhill speed. That restraint buys a strong Seg.4.</p>
+    </div>
+
+    <div style="background:var(--bg2);padding:1.6rem 1.4rem;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#f39c12"></div>
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#f39c12;margin-bottom:.4rem" data-en="Faded (~34%)" data-it="Faded (~34%)">Faded (~34%)</p>
+      <p style="font-size:1.15rem;font-weight:900;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;margin-bottom:.5rem" data-en="The middle third" data-it="Il terzo centrale">The middle third</p>
+      <p style="font-size:.82rem;color:var(--mu);line-height:1.65"
+        data-en="Runners whose positive split falls in the middle third for their bucket. They started slightly faster than ideal in Seg.1 — not recklessly, but enough to accumulate a manageable debt. Their second half is slower than their first, but the degradation is not catastrophic. This is the most common Boston experience: a race that felt controlled until about mile 20, then required significant effort to hold pace through the Newton Hills and into Boylston."
+        data-it="Runner il cui positive split cade nel terzo centrale per la loro fascia. Hanno iniziato leggermente più veloci dell'ideale nel Seg.1 — non in modo sconsiderato, ma abbastanza da accumulare un debito gestibile. La loro seconda metà è più lenta della prima, ma il degrado non è catastrofico. Questa è l'esperienza Boston più comune: una gara che sembrava controllata fino circa al miglio 20, poi ha richiesto sforzo significativo.">Runners in the middle third of positive splits for their bucket. Started slightly faster than ideal in Seg.1 — not recklessly, but enough to accumulate debt. Second half slower but not catastrophic. The most common Boston experience: controlled until mile 20, then required significant effort to hold pace through Newton Hills.</p>
+    </div>
+
+    <div style="background:var(--bg2);padding:1.6rem 1.4rem;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:#e74c3c"></div>
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#e74c3c;margin-bottom:.4rem" data-en="Blowup (~33%)" data-it="Blowup (~33%)">Blowup (~33%)</p>
+      <p style="font-size:1.15rem;font-weight:900;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;margin-bottom:.5rem" data-en="The top-split third" data-it="Il terzo con più positive split">The top-split third</p>
+      <p style="font-size:.82rem;color:var(--mu);line-height:1.65"
+        data-en="Runners whose positive split falls in the top third for their bucket — the largest gap between first and second half. They went significantly faster than ideal in Seg.1 (typically 6–10 sec/km below ideal in the 2:40–3:00 range), carried that excess speed through Seg.2 feeling strong, and hit the Newton Hills with an empty or near-empty glycogen tank. Their Seg.4 pace is 13–25 sec/km worse than ideal. Note: these are not bad runners. They are runners who made one decision — in Hopkinton, in the first 10 kilometers — and that decision decided the rest of their race."
+        data-it="Runner il cui positive split cade nel terzo superiore per la loro fascia — il maggior gap tra prima e seconda metà. Sono andati significativamente più veloci dell'ideale nel Seg.1 (tipicamente 6–10 sec/km sotto l'ideale nella fascia 2:40–3:00), hanno mantenuto questa velocità in eccesso nel Seg.2 sentendosi forti, e hanno raggiunto le Newton Hills con il serbatoio di glicogeno vuoto o quasi. Il loro passo nel Seg.4 è 13–25 sec/km peggio dell'ideale.">Runners in the top third of positive splits — largest first/second half gap. Went 6–10 sec/km faster than ideal in Seg.1, felt strong through Seg.2, and hit the Newton Hills with an empty glycogen tank. Seg.4 is 13–25 sec/km worse than ideal. These are not bad runners — they made <strong style="color:var(--tx)">one decision in Hopkinton</strong> and that decision decided their race.</p>
+    </div>
+
+  </div>
+</section>
+<div class="div"></div>
 
 <!-- COURSE -->
 <section id="course">
   <div class="sh">
     <span class="lbl" data-en="The course" data-it="Il percorso">The course</span>
-    <h2 data-en="4 segments, 42.2 km" data-it="4 segmenti, 42.2 km">4 segments, 42.2 km</h2>
-    <p data-en="From Hopkinton to Boylston Street. Each segment demands a different strategy." data-it="Da Hopkinton a Boylston Street. Ogni segmento richiede una strategia diversa.">From Hopkinton to Boylston Street. Each segment demands a different strategy.</p>
+    <h2 data-en="4 segments — 4 traps" data-it="4 segmenti — 4 trappole">4 segments — 4 traps</h2>
+    <p data-en="The course profile doesn't change. What changes is whether you respect it." data-it="Il profilo del percorso non cambia. Ciò che cambia è se lo rispetti.">The course profile doesn't change. What changes is whether you respect it.</p>
   </div>
   <div class="g4">
     <div class="sc s1b"><div class="sbg">1</div>
-      <div class="stag s1" data-en="Segment 1" data-it="Segmento 1">Segment 1</div>
-      <div class="stitle" data-en="Downhill start" data-it="Discesa iniziale">Downhill start</div>
-      <div class="sdist"><span class="mk">0 → 10 km · 10 km</span><span class="ik">0 → 6.2 mi · 6.2 mi</span></div>
-      <div><span class="bdg" style="color:var(--s1);border-color:var(--s1)"><span class="mk">−91 m</span><span class="ik">−299 ft</span></span></div>
-      <p class="sdesc" data-en="Deceptively easy. Every stride absorbs eccentric load. Fast runners go 4–5 sec/km faster here — and pay double on Newton Hills." data-it="Sembra facile ma carica i quad eccentricamente. I runner veloci corrono 4–5 sec/km più veloci — e pagano il doppio sulle Newton Hills.">Deceptively easy. Every stride absorbs eccentric load. Fast runners go 4–5 sec/km faster here.</p>
+      <div class="stag s1">Segment 1</div>
+      <div class="stitle" data-en="The downhill trap" data-it="La trappola della discesa">The downhill trap</div>
+      <div class="sdist"><span class="mk">0→10 km · −91 m</span><span class="ik">0→6.2 mi · −299 ft</span></div>
+      <span class="bdg" style="color:var(--s1);border-color:var(--s1)" data-en="Ideal: SLOWER than goal" data-it="Ideale: PIÙ LENTO del target">Ideal: SLOWER than goal</span>
+      <p class="sdesc" data-en="Executed runners go even slower than the grade-adjusted ideal. Blowup runners go 6–10 sec/km faster — and pay double in Seg.4." data-it="I runner executed vanno più lento dell'ideale. I runner blowup vanno 6–10 sec/km troppo veloci — e pagano doppio nel Seg.4.">Executed runners go slower than ideal. Blowup runners go 6–10 sec/km too fast — and pay double in Seg.4.</p>
     </div>
     <div class="sc s2b"><div class="sbg">2</div>
-      <div class="stag s2" data-en="Segment 2" data-it="Segmento 2">Segment 2</div>
-      <div class="stitle" data-en="Flat section" data-it="Parte piatta">Flat section</div>
-      <div class="sdist"><span class="mk">10 → 25 km · 15 km</span><span class="ik">6.2 → 15.5 mi · 9.3 mi</span></div>
-      <div><span class="bdg" style="color:var(--s2);border-color:var(--s2)"><span class="mk">±0 m</span><span class="ik">±0 ft</span></span></div>
-      <p class="sdesc" data-en="Where the race is built. The 25K gate is critical: if you're behind here, revise your plan before the hills." data-it="Dove si costruisce la gara. Il gate a 25K è critico: se sei indietro qui, rivedi il piano prima delle colline.">Where the race is built. The 25K gate is critical: if you're behind here, revise your plan.</p>
+      <div class="stag s2">Segment 2</div>
+      <div class="stitle" data-en="False security" data-it="Falsa sicurezza">False security</div>
+      <div class="sdist"><span class="mk">10→25 km · ±0 m</span><span class="ik">6.2→15.5 mi · ±0 ft</span></div>
+      <span class="bdg" style="color:var(--s2);border-color:var(--s2)" data-en="Ideal: on goal pace" data-it="Ideale: al passo obiettivo">Ideal: on goal pace</span>
+      <p class="sdesc" data-en="Executed runners settle near ideal. Blowup runners are still too fast — the Hopkinton adrenaline carries to Wellesley. They feel great. The hills don't care." data-it="I runner executed si stabilizzano vicino all'ideale. I runner blowup sono ancora troppo veloci — l'adrenalina di Hopkinton arriva a Wellesley.">Executed near ideal. Blowup runners still too fast through Wellesley. They feel great. The Newton Hills don't care.</p>
     </div>
     <div class="sc s3b"><div class="sbg">3</div>
-      <div class="stag s3" data-en="Segment 3" data-it="Segmento 3">Segment 3</div>
+      <div class="stag s3">Segment 3</div>
       <div class="stitle">Newton Hills</div>
-      <div class="sdist"><span class="mk">25 → 35 km · 10 km</span><span class="ik">15.5 → 21.7 mi · 6.2 mi</span></div>
-      <div><span class="bdg" style="color:var(--s3);border-color:var(--s3)"><span class="mk">+58 m</span><span class="ik">+190 ft</span></span></div>
-      <p class="sdesc" data-en="4 hills. Heartbreak Hill at mile 20.5. Everyone slows — the question is by how much. Where races are won and lost." data-it="4 colline. Heartbreak Hill al km 32. Tutti rallentano — la domanda è di quanto. Dove si vincono e perdono le gare.">4 hills. Heartbreak Hill at mile 20.5. Everyone slows — the question is by how much.</p>
+      <div class="sdist"><span class="mk">25→35 km · +58 m</span><span class="ik">15.5→21.7 mi · +190 ft</span></div>
+      <span class="bdg" style="color:var(--s3);border-color:var(--s3)" data-en="Ideal: slower than goal" data-it="Ideale: più lento del target">Ideal: slower than goal</span>
+      <p class="sdesc" data-en="Executed runners slow near ideal. Blowup runners arrive at Heartbreak already in debt — the hills collect the Hopkinton loan with interest." data-it="I runner executed rallentano vicino all'ideale. I runner blowup arrivano a Heartbreak già in debito — le colline riscuotono il prestito di Hopkinton.">Executed near ideal. Blowup runners arrive at Heartbreak already in debt — the hills collect with interest.</p>
     </div>
     <div class="sc s4b"><div class="sbg">4</div>
-      <div class="stag s4" data-en="Segment 4" data-it="Segmento 4">Segment 4</div>
-      <div class="stitle" data-en="Final downhill" data-it="Finale discesa">Final downhill</div>
-      <div class="sdist"><span class="mk">35 → 42.2 km · 7.2 km</span><span class="ik">21.7 → 26.2 mi · 4.5 mi</span></div>
-      <div><span class="bdg" style="color:var(--s4);border-color:var(--s4)"><span class="mk">−38 m</span><span class="ik">−125 ft</span></span></div>
-      <p class="sdesc" data-en="Boston's paradox: downhill, but the slowest segment. Depleted glycogen turns the elevation bonus into punishment." data-it="Il paradosso di Boston: in discesa ma il segmento più lento. Il glicogeno esaurito trasforma il vantaggio altimetrico in punizione.">Boston's paradox: downhill, but the slowest segment. Depleted glycogen turns the bonus into punishment.</p>
+      <div class="stag s4">Segment 4</div>
+      <div class="stitle" data-en="Where Boston is decided" data-it="Dove si decide Boston">Where Boston is decided</div>
+      <div class="sdist"><span class="mk">35→42.2 km · −38 m</span><span class="ik">21.7→26.2 mi · −125 ft</span></div>
+      <span class="bdg" style="color:var(--s4);border-color:var(--s4)" data-en="Ideal: faster than goal" data-it="Ideale: più veloce del target">Ideal: faster than goal</span>
+      <p class="sdesc" data-en="Executed runners approach ideal — Boylston is the reward. Blowup runners lose 13–20 sec/km vs ideal. Downhill is not free speed on broken legs." data-it="I runner executed si avvicinano all'ideale — Boylston è la ricompensa. I runner blowup perdono 13–20 sec/km vs ideale.">Executed near ideal — Boylston is the reward. Blowup runners lose 13–20 sec/km vs ideal.</p>
     </div>
   </div>
 </section>
 <div class="div"></div>
 
-<!-- CHEAT SHEET -->
-<div class="cbg sf" id="cheatsheet">
+<!-- MAIN DASHBOARD -->
+<div class="dash-bg sf" id="dashboard">
 <div class="inner">
   <div class="sh">
-    <span class="lbl" data-en="Interactive cheat sheet" data-it="Cheat sheet interattivo">Interactive cheat sheet</span>
-    <h2 data-en="Your race strategy" data-it="La tua strategia di gara">Your race strategy</h2>
-    <p data-en="Select your goal time. Data: 2023+2025 average (normal conditions, 2024 excluded)." data-it="Seleziona il tempo obiettivo. Dati: media 2023+2025 (condizioni normali, 2024 escluso).">Select your goal time. Data: 2023+2025 average (normal conditions, 2024 excluded).</p>
+    <span class="lbl" data-en="Interactive analysis" data-it="Analisi interattiva">Interactive analysis</span>
+    <h2 data-en="How your bucket actually races" data-it="Come corre davvero la tua fascia">How your bucket actually races</h2>
+    <p data-en="Select a target time. See how runners split into three groups and how each diverges from grade-adjusted ideal." data-it="Seleziona un tempo obiettivo. Vedi come i runner si dividono in tre gruppi e come ogni gruppo diverge dall'ideale.">Select a target time. See how runners split into three groups and how each diverges from grade-adjusted ideal.</p>
   </div>
+
   <div class="bbar" id="bbar"></div>
-  <div class="rcount" id="rcount"><span id="rcn" class="rcn">769</span><span id="rcl" data-en="runners in this bucket (2023+2025)" data-it="runner in questa fascia (2023+2025)">runners in this bucket (2023+2025)</span></div>
-  <div class="s4g" id="sRow"></div>
-  <div class="lbl" style="margin-bottom:.7rem" data-en="Cumulative splits" data-it="Split cumulativi">Cumulative splits</div>
-  <div class="cpg" id="cpg"></div>
-  <div class="c2">
-    <div>
-      <div class="lbl" style="margin-bottom:.7rem;margin-top:1.25rem" data-en="Pace per segment" data-it="Passo per segmento">Pace per segment</div>
-      <table class="stbl" id="stbl"></table>
-      <div class="note" id="cnote"><span style="color:var(--ac);flex-shrink:0">●</span><span></span></div>
-    </div>
-    <div>
-      <div class="lbl" style="margin-bottom:.7rem;margin-top:1.25rem" data-en="Effort distribution" data-it="Distribuzione sforzo">Effort distribution</div>
-      <div class="cw" style="height:280px"><canvas id="radarC"></canvas></div>
+  <div class="rcount"><span class="rcn" id="rcn">-</span><span id="rclbl">runners in this bucket</span><span style="margin-left:.5rem;color:var(--mu2);font-size:.75rem" id="rcRm"></span></div>
+  <div class="groups3" id="gCards"></div>
+
+  <div class="tab-nav">
+    <button class="tn active" onclick="showTab(this,'t5')" data-en="Pacing strategy" data-it="Strategia di gara">Pacing strategy</button>
+    <button class="tn" onclick="showTab(this,'t1')" data-en="Actual vs ideal" data-it="Reale vs ideale">Actual vs ideal</button>
+    <button class="tn" onclick="showTab(this,'t2')" data-en="Pace by group" data-it="Passo per gruppo">Pace by group</button>
+    <button class="tn" onclick="showTab(this,'t3')" data-en="Positive split" data-it="Positive split">Positive split</button>
+    <button class="tn" onclick="showTab(this,'t4')" data-en="All buckets" data-it="Tutti i bucket">All buckets</button>
+  </div>
+
+  <!-- TAB: PACING STRATEGY (default) -->
+  <div id="t5" class="tp active">
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--br);border:1px solid var(--br);margin-bottom:1.25rem" id="sRowStrat"></div>
+    <p class="lbl" style="margin-bottom:.6rem" data-en="Cumulative splits" data-it="Split cumulativi">Cumulative splits</p>
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--br);border:1px solid var(--br);margin-bottom:1.75rem" id="cpgStrat"></div>
+    <div style="display:grid;grid-template-columns:1fr 260px;gap:1.75rem;align-items:start">
+      <div>
+        <p class="lbl" style="margin-bottom:.7rem" data-en="Pace per segment — ideal vs 3 groups" data-it="Passo per segmento — ideale vs 3 gruppi">Pace per segment — ideal vs 3 groups</p>
+        <table class="strat-table" id="stratTable"></table>
+        <div class="note" style="margin-top:.9rem" id="noteBox"><span id="noteText"></span></div>
+      </div>
+      <div class="strat-right">
+        <p class="lbl" style="margin-bottom:.7rem" data-en="Effort distribution" data-it="Distribuzione sforzo">Effort distribution</p>
+        <div class="cw" style="height:240px"><canvas id="radarStrat"></canvas></div>
+        <div class="leg" style="margin-top:.5rem;justify-content:center">
+          <span class="li"><span class="ld" style="background:#3498db;opacity:.6"></span>Ideal</span>
+          <span class="li"><span class="ld" style="background:#2ecc71"></span>Exec.</span>
+          <span class="li"><span class="ld" style="background:#e74c3c"></span>Blowup</span>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- TAB: ACTUAL VS IDEAL -->
+  <div id="t1" class="tp">
+    <div class="cf">
+      <h3 data-en="Delta vs grade-adjusted ideal (sec/km)" data-it="Delta vs ideale grade-adjusted (sec/km)">Delta vs grade-adjusted ideal (sec/km)</h3>
+      <p class="cs" data-en="Negative = faster than ideal. Positive = slower. Ideal from Runners Connect grade-adjusted formula." data-it="Negativo = più veloce dell'ideale. Positivo = più lento.">Negative = faster than ideal. Positive = slower.</p>
+      <div class="leg"><span class="li"><span class="ld" style="background:#2ecc71"></span>Executed</span><span class="li"><span class="ld" style="background:#f39c12"></span>Faded</span><span class="li"><span class="ld" style="background:#e74c3c"></span>Blowup</span></div>
+      <div class="cw" style="height:280px"><canvas id="deltaC"></canvas></div>
+    </div>
+    <div class="cf">
+      <h3 data-en="Ideal vs actual pace" data-it="Passo ideale vs reale">Ideal vs actual pace</h3>
+      <p class="cs" data-en="What this bucket should run (ideal) vs executed, faded, blowup. Lower = faster." data-it="Cosa dovrebbe correre questa fascia (ideale) vs i tre gruppi. Più basso = più veloce.">What this bucket should run (ideal) vs all three groups. Lower = faster.</p>
+      <div class="leg"><span class="li"><span class="ld" style="background:#3498db;opacity:.6"></span>Ideal</span><span class="li"><span class="ld" style="background:#2ecc71"></span>Executed</span><span class="li"><span class="ld" style="background:#f39c12"></span>Faded</span><span class="li"><span class="ld" style="background:#e74c3c"></span>Blowup</span></div>
+      <div class="cw" style="height:250px"><canvas id="paceCompC"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TAB: PACE BY GROUP -->
+  <div id="t2" class="tp">
+    <div class="cf">
+      <h3 data-en="Median pace per segment — all 3 groups + ideal" data-it="Passo mediano per segmento — tutti i 3 gruppi + ideale">Median pace per segment — all 3 groups + ideal</h3>
+      <p class="cs" data-en="Lower = faster. Executed and ideal converge; blowup diverges in Seg.3 and Seg.4." data-it="Più basso = più veloce. Executed e ideal convergono; blowup diverge nel Seg.3 e Seg.4.">Lower = faster. Executed and ideal converge; blowup diverges in Seg.3 and Seg.4.</p>
+      <div class="cw" style="height:280px"><canvas id="paceAbsC"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TAB: POSITIVE SPLIT -->
+  <div id="t3" class="tp">
+    <div class="g2">
+      <div class="cf">
+        <h3 data-en="Positive split by group (this bucket)" data-it="Positive split per gruppo (questa fascia)">Positive split by group</h3>
+        <p class="cs" data-en="Median positive split per group." data-it="Positive split mediano per gruppo.">Median positive split per group.</p>
+        <div class="cw" style="height:240px"><canvas id="psGroupC"></canvas></div>
+      </div>
+      <div class="cf">
+        <h3 data-en="% with negative split — all buckets" data-it="% con negative split — tutti i bucket">% with negative split</h3>
+        <p class="cs" data-en="Negative split = 2nd half faster than 1st. Rare at Boston." data-it="Negative split = 2a metà più veloce della 1a. Raro a Boston.">Negative split = 2nd half faster. Rare at Boston.</p>
+        <div class="cw" style="height:240px"><canvas id="negC"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: ALL BUCKETS -->
+  <div id="t4" class="tp">
+    <div class="cf">
+      <h3 data-en="Seg.1 delta vs ideal — all buckets, 3 groups" data-it="Delta Seg.1 vs ideale — tutti i bucket">Seg.1 delta vs ideal — all buckets</h3>
+      <p class="cs" data-en="Negative = faster than ideal. Executed group's positive delta = key signature of a well-run Boston." data-it="Negativo = più veloce dell'ideale. Il delta positivo del gruppo executed nel Seg.1 è la firma di una Boston ben corsa.">Negative = faster than ideal in Seg.1.</p>
+      <div class="leg" id="legAll"></div>
+      <div class="cw" style="height:260px"><canvas id="allBktC"></canvas></div>
+    </div>
+    <div class="cf">
+      <h3 data-en="Seg.4 delta vs ideal — all buckets, 3 groups" data-it="Delta Seg.4 vs ideale — tutti i bucket">Seg.4 delta vs ideal — all buckets</h3>
+      <p class="cs" data-en="Where the Seg.1 decision is paid back." data-it="Dove il debito del Seg.1 viene ripagato.">Where the Seg.1 decision is paid back.</p>
+      <div class="cw" style="height:260px"><canvas id="allBktC2"></canvas></div>
+    </div>
+  </div>
+
 </div>
 </div>
 <div class="div"></div>
 
-<!-- ANALYSIS -->
-<section id="analysis">
+<!-- INSIGHTS -->
+<section id="insights">
   <div class="sh">
-    <span class="lbl" data-en="Segment analysis" data-it="Analisi segmenti">Segment analysis</span>
-    <h2 data-en="Where you gain and where you lose" data-it="Dove si vince e dove si perde">Where you gain and where you lose</h2>
-    <p data-en="% deviation from average pace per segment. Everyone goes faster early and slower late — the question is by how much." data-it="Deviazione % dal passo medio per segmento. Tutti corrono più veloci all'inizio — la domanda è di quanto.">% deviation from average pace per segment.</p>
+    <span class="lbl" data-en="Key findings" data-it="Risultati chiave">Key findings</span>
+    <h2 data-en="The data is unambiguous." data-it="I dati sono inequivocabili.">The data is unambiguous.</h2>
+    <p data-en="These findings hold across all buckets, both genders, both editions." data-it="Questi risultati valgono in tutte le fasce, entrambi i generi e entrambe le edizioni.">These findings hold across all buckets, both genders, both editions.</p>
   </div>
-  <div class="cf">
-    <h3 data-en="% deviation from average pace by segment" data-it="Deviazione % dal passo medio per segmento">% deviation from average pace by segment</h3>
-    <p class="cs" data-en="Negative = faster than average. Positive = slower. 2023+2025." data-it="Negativo = più veloce della media. Positivo = più lento. 2023+2025.">Negative = faster than average. Positive = slower. 2023+2025.</p>
-    <div class="leg" id="legMain"></div>
-    <div class="cw" style="height:280px"><canvas id="devC"></canvas></div>
-  </div>
-  <div class="g2" style="margin-bottom:1.6rem">
-    <div class="cc">
-      <h3 data-en="Sec/km gained or lost" data-it="Sec/km guadagnati o persi">Sec/km gained or lost</h3>
-      <p class="cs" data-en="Absolute deviation vs own average pace per segment." data-it="Deviazione assoluta rispetto alla propria media per segmento.">Absolute deviation vs own average pace.</p>
-      <div class="cw" style="height:250px"><canvas id="secC"></canvas></div>
+  <div class="insights">
+    <div class="ic"><div class="inum">+3.4s</div>
+      <h4 data-en="Executed runners go SLOWER than ideal in Seg.1" data-it="I runner executed vanno PIÙ LENTO dell'ideale nel Seg.1">Executed: slower than ideal in Seg.1</h4>
+      <p data-en="In the 2:40 bucket, executed runners ran Seg.1 at +3.4 sec/km above grade-adjusted ideal. They refused the free speed. That single choice predicts the entire rest of the race." data-it="Nella fascia 2:40, i runner executed hanno corso il Seg.1 a +3.4 sec/km sopra l'ideale. Hanno rifiutato la velocità gratuita. Quella scelta predice il resto della gara.">In the 2:40 bucket, executed runners ran Seg.1 +3.4 sec/km above grade-adjusted ideal. They refused the free speed. That single choice predicts the rest of the race.</p>
     </div>
-    <div class="cc">
-      <h3 data-en="Positive split by bucket" data-it="Positive split per fascia">Positive split by bucket</h3>
-      <p class="cs" data-en="2nd half − 1st half in minutes. A perfect race at Boston is rare." data-it="2a metà − 1a metà in minuti. Una gara perfetta a Boston è rara.">2nd half − 1st half in minutes.</p>
-      <div class="cw" style="height:250px"><canvas id="psC"></canvas></div>
+    <div class="ic"><div class="inum">−6.4s</div>
+      <h4 data-en="Blowup runners go 6–10 sec/km too fast in Seg.1" data-it="I runner blowup vanno 6–10 sec/km troppo veloci nel Seg.1">Blowup: 6–10 sec/km too fast in Seg.1</h4>
+      <p data-en="In the same bucket, blowup runners were −6.4 sec/km vs ideal in Seg.1 — 10 sec/km faster than executed. That gap reappears as +13.5 sec/km lost in Seg.4. The transfer is almost exact." data-it="Nella stessa fascia, i runner blowup erano −6.4 sec/km vs ideale nel Seg.1 — 10 sec/km più veloci degli executed. Quel gap riemerge come +13.5 sec/km perso nel Seg.4.">In the same bucket, blowup runners were −6.4 sec/km vs ideal in Seg.1 — 10 sec/km faster than executed. That gap reappears as +13.5 sec/km lost in Seg.4.</p>
     </div>
-  </div>
-  <div class="g2">
-    <div class="cc">
-      <h3 data-en="% runners with negative split" data-it="% runner con negative split">% runners with negative split</h3>
-      <p class="cs" data-en="Only 4–23% manage to run the 2nd half faster. Highly unusual at Boston." data-it="Solo il 4–23% corre la 2a metà più veloce. Molto raro a Boston.">Only 4–23% manage to run the 2nd half faster.</p>
-      <div class="cw" style="height:230px"><canvas id="negC"></canvas></div>
-    </div>
-    <div class="cc">
-      <h3 data-en="Age effect on Seg.4 — who holds on?" data-it="Effetto età sul Seg.4">Age effect on Seg.4</h3>
-      <p class="cs" data-en="Slowdown % vs own average in the final 7.2km, by age group." data-it="Rallentamento % vs propria media nel finale, per fascia d'età.">Slowdown % vs average in final 7.2km, by age.</p>
-      <div class="leg"><span class="li"><span class="ld" style="background:#7F77DD"></span>18–29</span><span class="li"><span class="ld" style="background:#3498db"></span>30–39</span><span class="li"><span class="ld" style="background:#2ecc71"></span>40–49</span><span class="li"><span class="ld" style="background:#f39c12"></span>50–59</span><span class="li"><span class="ld" style="background:#888"></span>60+</span></div>
-      <div class="cw" style="height:200px"><canvas id="ageC"></canvas></div>
-    </div>
-  </div>
-  <div class="cf" style="margin-top:1.6rem;margin-bottom:0">
-    <h3 data-en="Men vs Women — Seg.4 deviation (equivalent buckets)" data-it="Uomini vs Donne — deviazione Seg.4 (bucket equivalenti)">Men vs Women — Seg.4 deviation</h3>
-    <p class="cs" data-en="Men sub-3:00 ↔ Women sub-3:15. Women show systematically lower Seg.4 fade." data-it="Uomini sub-3:00 ↔ Donne sub-3:15. Le donne mostrano sistematicamente meno calo nel Seg.4.">Men sub-3:00 ↔ Women sub-3:15. Women show systematically lower Seg.4 fade.</p>
-    <div class="leg"><span class="li"><span class="ld" style="background:#3498db"></span><span data-en="Men" data-it="Uomini">Men</span></span><span class="li"><span class="ld" style="background:#e91e8c"></span><span data-en="Women" data-it="Donne">Women</span></span></div>
-    <div class="cw" style="height:240px"><canvas id="gC"></canvas></div>
-  </div>
-  <div class="ins">
-    <div class="ic"><div class="inum" id="i1n">+7s</div>
-      <h4 data-en="The Seg.4 paradox" data-it="Il paradosso del Seg.4">The Seg.4 paradox</h4>
-      <p data-en="The final downhill (−38m) is the slowest segment for every runner. Depleted glycogen and eccentric muscle damage override the elevation advantage." data-it="Il finale in discesa è il segmento più lento per ogni runner. Glicogeno esaurito e danno muscolare eccentrico annullano il vantaggio altimetrico.">The final downhill is the slowest segment for every runner.</p>
-    </div>
-    <div class="ic"><div class="inum" id="i2n">8×</div>
-      <h4 data-en="Positive split amplified" data-it="Positive split amplificato">Positive split amplified</h4>
-      <p data-en="Positive split grows dramatically across buckets. Boston punishes early pace aggression more than any other major." data-it="Il positive split cresce enormemente attraverso le fasce. Boston punisce la partenza troppo veloce più di qualsiasi altra major.">Positive split grows dramatically across buckets.</p>
-    </div>
-    <div class="ic"><div class="inum" id="i3n">16%</div>
-      <h4 data-en="Negative splits: rare by design" data-it="Negative split: raro per design">Negative splits: rare by design</h4>
-      <p data-en="Fast men: ~16%, top women: ~19–23%. At 4:30+, only 5% go negative. A perfectly executed Boston is genuinely exceptional." data-it="Uomini veloci: ~16%, donne top: ~19–23%. Sopra le 4:30 solo il 5% va a crescere. Una Boston perfetta è genuinamente eccezionale.">Fast men: ~16%, top women: ~19–23%. A perfectly executed Boston is exceptional.</p>
+    <div class="ic"><div class="inum">~33%</div>
+      <h4 data-en="Every bucket. Every pace. Every time." data-it="Ogni fascia. Ogni passo. Ogni volta.">Every bucket. Every pace. Every time.</h4>
+      <p data-en="In every bucket and for both genders: ~33% blow up, ~34% fade, ~33% execute. This is not a beginner problem — it happens at 2:40, 3:30, 4:30. Boston's downhill catches everyone." data-it="In ogni fascia e per entrambi i generi: ~33% esplode, ~34% cala, ~33% esegue. Non è un problema dei principianti — succede a 2:40, 3:30, 4:30.">In every bucket and both genders: ~33% blow up, ~34% fade, ~33% execute. This is not a beginner problem — it happens at every pace level.</p>
     </div>
   </div>
 </section>
@@ -365,25 +433,18 @@ body.gender-W .rcount .rcn{color:var(--wc);}
     <h2 data-en="The engineer behind the data" data-it="L'ingegnere dietro i dati">The engineer behind the data</h2>
   </div>
   <div class="about-grid">
-    <img class="avatar" src="data:image/jpeg;base64,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" alt="Fabio — Running Engineer" style="display:block;">
+    <img class="avatar" src="data:image/jpeg;base64,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" alt="Fabio">
     <div>
-      <div class="about-name" data-en="Running Engineer" data-it="Running Ingegnere">Running Engineer</div>
+      <div class="about-name">Fabio</div>
       <div class="about-handle"><span id="handleDisplay">@runningengineer</span> · YouTube</div>
-      <p class="about-bio" data-en="I’m Fabio, an Italian engineer living in Zurich, Switzerland, father and a MARATHON RUNNER. My channel is all about my infinite passion for running, I share all my trainings (the good, the bad and the ugly), my running outfit, gear, software and more. I train everyday while working a full time job as an engineer and with a family with two small kids. Everything analyzed in full details with an engineering approach. Let’s go!" data-it="Sono Fabio, un ingegnere italiano che vive a Zurigo, Svizzera, papà e MARATONETA. Il mio canale è tutto dedicato alla mia infinita passione per la corsa: condivido tutti i miei allenamenti (i belli, i brutti e i disastrosi), abbigliamento, attrezzatura, software e molto altro. Mi alleno ogni giorno pur lavorando a tempo pieno come ingegnere e con una famiglia con due bambini piccoli. Tutto analizzato nei minimi dettagli con un approccio ingegneristico. Andiamo!">I’m Fabio, an Italian engineer living in Zurich, Switzerland, father and a MARATHON RUNNER. My channel is all about my infinite passion for running, I share all my trainings (the good, the bad and the ugly), my running outfit, gear, software and more. I train everyday while working a full time job as an engineer and with a family with two small kids. Everything analyzed in full details with an engineering approach. Let’s go!</p>
+      <p class="about-bio"
+        data-en="I&#39;m Fabio, an Italian engineer living in Zurich, Switzerland, father and a MARATHON RUNNER. My channel is all about my infinite passion for running, I share all my trainings (the good, the bad and the ugly), my running outfit, gear, software and more. I train everyday while working a full time job as an engineer and with a family with two small kids. Everything analyzed in full details with an engineering approach. Let&#39;s go!"
+        data-it="Sono Fabio, un ingegnere italiano che vive a Zurigo, Svizzera, pap&#224; e MARATONETA. Il mio canale &#232; tutto dedicato alla mia infinita passione per la corsa: alleni, abbigliamento, attrezzatura, software e molto altro. Mi alleno ogni giorno lavorando a tempo pieno e con una famiglia con due bambini. Tutto analizzato con un approccio ingegneristico. Andiamo!">
+        I&#39;m Fabio, an Italian engineer living in Zurich, Switzerland, father and a MARATHON RUNNER. My channel is about running — trainings, gear, software, race analysis. Engineering approach. Let&#39;s go!
+      </p>
       <div class="yt-links">
-        <a href="https://www.youtube.com/@RunningEngineer23" target="_blank" class="yt-btn" id="ytEN">
-          <span class="yt-icon"></span>
-          <span>@runningengineer</span>
-        </a>
-        <a href="https://www.youtube.com/@RunningIngegnere" target="_blank" class="yt-btn" id="ytIT">
-          <span class="yt-icon"></span>
-          <span>@runningingegnere</span>
-        </a>
-      </div>
-      <div class="stats-strip">
-        <div class="ss"><div class="sv">21,985</div><div class="sl" data-en="runners analyzed" data-it="runner analizzati">runners analyzed</div></div>
-        <div class="ss"><div class="sv">2023+25</div><div class="sl" data-en="editions (normal cond.)" data-it="edizioni (cond. normali)">editions (normal cond.)</div></div>
-        <div class="ss"><div class="sv">38</div><div class="sl" data-en="time buckets total" data-it="fasce totali">time buckets total</div></div>
+        <a href="https://www.youtube.com/@RunningEngineer23" target="_blank" class="yt-btn"><span class="yt-icon"></span>@RunningEngineer23</a>
+        <a href="https://www.youtube.com/@RunningIngegnere" target="_blank" class="yt-btn"><span class="yt-icon"></span>@RunningIngegnere</a>
       </div>
     </div>
   </div>
@@ -395,384 +456,393 @@ body.gender-W .rcount .rcn{color:var(--wc);}
 <section>
   <div class="sh">
     <span class="lbl" data-en="Methodology" data-it="Metodologia">Methodology</span>
-    <h2 data-en="How the data was processed" data-it="Come sono stati elaborati i dati">How the data was processed</h2>
+    <h2 data-en="How the analysis works" data-it="Come funziona l'analisi">How the analysis works</h2>
+    <p data-en="A full engineering breakdown of every analytical decision made in this study." data-it="Una spiegazione ingegneristica completa di ogni scelta analitica fatta in questo studio.">A full engineering breakdown of every analytical decision made in this study.</p>
   </div>
-  <div class="g2">
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem">
+
     <div>
-      <div class="lbl" style="margin-bottom:.5rem" data-en="Data source" data-it="Fonte dati">Data source</div>
-      <p style="font-size:.85rem;color:var(--mu);line-height:1.75;margin-bottom:1.1rem" data-en="Official BAA results — Boston 2023 and 2025. Each runner has official splits at 5K, 10K, 15K, 20K, Half, 25K, 30K, 35K, 40K, Finish." data-it="Risultati ufficiali BAA — Boston 2023 e 2025. Ogni runner ha split ufficiali a 5K, 10K, 15K, 20K, Half, 25K, 30K, 35K, 40K, Finish.">Official BAA results — Boston 2023 and 2025. Each runner has official splits at 5K, 10K, 15K, 20K, Half, 25K, 30K, 35K, 40K, Finish.</p>
-      <div class="lbl" style="margin-bottom:.5rem" data-en="Filters" data-it="Filtri">Filters</div>
-      <p style="font-size:.85rem;color:var(--mu);line-height:1.75" data-en="Buckets of ±2:30 around target time (±7:30 for 15-min buckets from 4:00). Excluded: missing key splits. 2024 excluded: anomalous weather caused positive splits nearly double vs 2023." data-it="Fasce di ±2:30 intorno al tempo target (±7:30 per fasce da 15 min dopo le 4:00). Esclusi: split chiave mancanti. 2024 escluso: il meteo anomalo causava positive split quasi doppi rispetto al 2023.">Buckets of ±2:30 around target time. Excluded: missing key splits. 2024 excluded: anomalous weather caused nearly double positive splits vs 2023.</p>
+      <p class="lbl" style="margin-bottom:.6rem" data-en="1 — Data source" data-it="1 — Fonte dati">1 — Data source</p>
+      <p style="font-size:.83rem;color:var(--mu);line-height:1.8;margin-bottom:1.25rem"
+        data-en="Official BAA (Boston Athletic Association) chip timing results for the 2023 and 2025 editions. Each runner record contains official split times at 9 checkpoints: 5K, 10K, 15K, 20K, Half, 25K, 30K, 35K, 40K, and Finish. Total: ~26,600 finishers in 2023 and ~28,400 in 2025. Filtered to men and women separately. The 2021 edition (held in October due to COVID) was excluded as non-representative. The 2022 edition lacked a consistent issue but was not available for this analysis."
+        data-it="Risultati ufficiali BAA (Boston Athletic Association) chip timing per le edizioni 2023 e 2025. Ogni record contiene split ufficiali a 9 checkpoint: 5K, 10K, 15K, 20K, Half, 25K, 30K, 35K, 40K e Finish. Totale: ~26.600 finisher nel 2023 e ~28.400 nel 2025. Filtrati separatamente per uomini e donne.">Official BAA chip timing results for 2023 and 2025. Each runner has splits at 9 checkpoints: 5K, 10K, 15K, 20K, Half, 25K, 30K, 35K, 40K, Finish. ~26,600 finishers in 2023 and ~28,400 in 2025. Men and women analyzed separately.</p>
+
+      <p class="lbl" style="margin-bottom:.6rem" data-en="2 — Time buckets" data-it="2 — Fasce di tempo">2 — Time buckets</p>
+      <p style="font-size:.83rem;color:var(--mu);line-height:1.8;margin-bottom:1.25rem"
+        data-en="Runners are grouped into target finish time buckets. Each bucket has a ±2:30 window: the '2:50' bucket contains all runners who finished between 2:47:30 and 2:52:30. Above 4:00, buckets are 15 minutes wide (±7:30 window) because the field thins. Men's buckets start at 2:20; women's at 2:55 — where sufficient sample sizes exist."
+        data-it="I runner sono raggruppati in fasce di tempo obiettivo. Ogni fascia ha una finestra di ±2:30: la fascia '2:50' contiene tutti i runner finiti tra 2:47:30 e 2:52:30. Sopra le 4:00, le fasce sono da 15 minuti (finestra ±7:30) perché il campo si assottiglia.">Runners grouped into ±2:30 windows around each target time. The '2:50' bucket = all runners finishing between 2:47:30–2:52:30. Above 4:00, buckets widen to ±7:30 as the field thins. Men start at 2:20; women at 2:55.</p>
+
+      <p class="lbl" style="margin-bottom:.6rem" data-en="3 — Outlier removal" data-it="3 — Rimozione outlier">3 — Outlier removal</p>
+      <p style="font-size:.83rem;color:var(--mu);line-height:1.8"
+        data-en="Any runner whose pace in a single segment deviates more than ±15% from their own overall average pace is removed. This catches: chip timing errors (e.g. a runner who is recorded stopping entirely for several minutes), medical stops, bathroom breaks long enough to distort the segment, and extreme blowups that are more 'DNF-but-finished' than a pacing choice. Removal rates range from 3.6% in the 2:40 bucket to 37.9% in the 5:00 bucket, reflecting more timing issues at back-of-pack paces. All remaining analysis uses median values, not mean — the median is robust to the residual right-skew in the positive split distribution (more runners fade than surge)."
+        data-it="Rimosso ogni runner con deviazione di passo su un singolo segmento superiore a ±15% rispetto alla propria media complessiva. Cattura: errori chip, soste mediche, pause bagno, e esplosioni estreme. Percentuali di rimozione: 3.6% nella fascia 2:40 fino a 37.9% nella fascia 5:00. L'analisi usa valori mediani, non medi — la mediana è robusta all'asimmetria residua nella distribuzione del positive split.">Any runner with a single-segment deviation >±15% from their own average is removed (timing errors, medical stops, extreme blowups). Removal: 3.6% at 2:40 → 37.9% at 5:00. All metrics use <strong style="color:var(--tx)">median, not mean</strong> — robust to the right-skewed positive split distribution.</p>
     </div>
+
     <div>
-      <div class="lbl" style="margin-bottom:.5rem" data-en="Segment calculation" data-it="Calcolo segmenti">Segment calculation</div>
-      <p style="font-size:.85rem;color:var(--mu);line-height:1.75;margin-bottom:1.1rem" data-en="Seg.1 = 0–10K. Seg.2 = 10K–25K. Seg.3 = 25K–35K. Seg.4 = 35K–Finish (7.195km). Deviation % = (segment pace − avg pace) / avg pace × 100." data-it="Seg.1 = 0–10K. Seg.2 = 10K–25K. Seg.3 = 25K–35K. Seg.4 = 35K–Finish (7.195km). Dev. % = (passo_seg − passo_medio) / passo_medio × 100.">Seg.1=0–10K. Seg.2=10K–25K. Seg.3=25K–35K. Seg.4=35K–Finish. Deviation % = (seg pace − avg pace) / avg pace × 100.</p>
-      <div class="lbl" style="margin-bottom:.5rem" data-en="Why exclude 2024?" data-it="Perché escludere il 2024?">Why exclude 2024?</div>
-      <p style="font-size:.85rem;color:var(--mu);line-height:1.75" data-en="In 2024, warm temperatures and headwinds caused positive splits nearly double compared to 2023 across all buckets (e.g. 2:50 men: +2:49 in 2023 vs +6:23 in 2024). Including 2024 would distort the pacing model for normal conditions." data-it="Nel 2024, temperature calde e vento contrario causarono positive split quasi doppi rispetto al 2023 in tutte le fasce (es. 2:50 uomini: +2:49 nel 2023 vs +6:23 nel 2024). Includere il 2024 distorcerebbe il modello per condizioni normali.">In 2024, warm temperatures and headwinds caused positive splits nearly double vs 2023 (e.g. 2:50 men: +2:49 in 2023 vs +6:23 in 2024). Including 2024 distorts the model for normal conditions.</p>
+      <p class="lbl" style="margin-bottom:.6rem" data-en="4 — Group classification" data-it="4 — Classificazione gruppi">4 — Group classification</p>
+      <p style="font-size:.83rem;color:var(--mu);line-height:1.8;margin-bottom:1.25rem"
+        data-en="After outlier removal, every remaining runner is classified into one of three groups based on their positive split (chip finish time minus twice the half marathon split time). The thresholds are data-driven and specific to each bucket: the 33rd and 67th percentile of the positive split distribution within that bucket define the group boundaries. This means 'Executed' always represents the best-paced third of runners in that bucket, regardless of what the absolute positive split values are. The three groups are remarkably stable: ~33% Executed, ~34% Faded, ~33% Blowup across all buckets and both genders."
+        data-it="Dopo la rimozione degli outlier, ogni runner viene classificato in uno dei tre gruppi in base al positive split (tempo finale meno due volte il tempo alla mezza). Le soglie sono data-driven e specifiche per ogni fascia: il 33° e 67° percentile della distribuzione del positive split definiscono i confini. I tre gruppi sono notevolmente stabili: ~33% Executed, ~34% Faded, ~33% Blowup in tutte le fasce e per entrambi i generi.">After outlier removal, every runner is classified by their positive split. Thresholds = 33rd/67th percentile within each bucket — so 'Executed' always means the best-paced third of that specific bucket. Result: ~33% Executed / ~34% Faded / ~33% Blowup, stable across every bucket and both genders.</p>
+
+      <p class="lbl" style="margin-bottom:.6rem" data-en="5 — Grade-adjusted ideal pacing" data-it="5 — Passo ideale grade-adjusted">5 — Grade-adjusted ideal pacing</p>
+      <p style="font-size:.83rem;color:var(--mu);line-height:1.8;margin-bottom:1.25rem"
+        data-en="The 'Ideal' pace is computed from the Runners Connect grade-adjusted formula, applied to the official Boston Marathon elevation profile (mile-by-mile data from Daniels/Burfoot/boston.com). The formula: add +13 sec/mi for every 1% of uphill grade above +0.4% threshold; subtract 8 sec/mi for every 1% of downhill grade below −1.5% threshold; no adjustment for grades in between. A base flat pace B is then solved algebraically so that the sum of all grade-adjusted segment times equals the goal time exactly. This gives the physically optimal pace for each segment if you run perfectly even effort. The ideal is not a prediction of how runners perform — it is the engineering benchmark against which performance is measured."
+        data-it="Il passo 'Ideale' è calcolato dalla formula grade-adjusted di Runners Connect, applicata al profilo altimetrico ufficiale di Boston (dati miglio per miglio da Daniels/Burfoot/boston.com). Formula: +13 sec/mi per ogni 1% di pendenza positiva sopra +0.4%; −8 sec/mi per ogni 1% di pendenza negativa sotto −1.5%; nessun aggiustamento nel mezzo. Un passo base flat B viene risolto algebricamente in modo che la somma di tutti i tempi aggiustati equivalga esattamente al tempo obiettivo.">Ideal pace uses the Runners Connect grade-adjusted formula on official Boston mile-by-mile elevation. <strong style="color:var(--tx)">+13 sec/mi per 1% uphill</strong> (above +0.4% threshold); <strong style="color:var(--tx)">−8 sec/mi per 1% downhill</strong> (below −1.5%). A base flat pace B is solved algebraically so all adjusted segment times sum exactly to the goal time. Ideal is not a prediction — it is the engineering benchmark.</p>
+
+      <p class="lbl" style="margin-bottom:.6rem" data-en="6 — Why 2024 is excluded" data-it="6 — Perché il 2024 è escluso">6 — Why 2024 is excluded</p>
+      <p style="font-size:.83rem;color:var(--mu);line-height:1.8"
+        data-en="The 2024 Boston Marathon was run under anomalous conditions: temperatures reached 69°F (21°C) at race time with a sustained easterly headwind. The effect was severe and measurable: positive splits in 2024 were nearly double those of 2023 across all buckets. For example, men in the 2:50 bucket averaged a +2:49 positive split in 2023 vs +6:23 in 2024 — the same type of runner, same course, 134% difference in second-half degradation. Including 2024 would inflate all deviation metrics and misrepresent what Boston looks like in normal conditions. The 2024 data is, however, extremely valuable as a worst-case scenario reference and will be made available separately."
+        data-it="La Boston Marathon 2024 è stata corsa in condizioni anomale: temperature a 21°C con vento contrario sostenuto da est. L'effetto è stato grave e misurabile: i positive split nel 2024 erano quasi doppi rispetto al 2023. Ad esempio, gli uomini nella fascia 2:50 hanno avuto un positive split medio di +2:49 nel 2023 vs +6:23 nel 2024 — stesso tipo di runner, stesso percorso, 134% di differenza nel degrado della seconda metà.">2024 was run at 69°F (21°C) with sustained east headwind. Positive splits were nearly double 2023 across all buckets (e.g. men 2:50: +2:49 in 2023 vs +6:23 in 2024 — same runners, same course, 134% more second-half degradation). Including 2024 inflates all deviation metrics and misrepresents normal Boston conditions.</p>
     </div>
+
   </div>
+
+  <div style="background:var(--bg2);border:1px solid var(--br);padding:1.4rem;margin-top:.5rem">
+    <p class="lbl" style="margin-bottom:.75rem" data-en="The grade-adjusted ideal formula — derivation" data-it="La formula ideale grade-adjusted — derivazione">The grade-adjusted ideal formula — derivation</p>
+    <p style="font-size:.83rem;color:var(--mu);line-height:1.8;margin-bottom:.75rem"
+      data-en="For each mile m, grade G_m = (elev[m] − elev[m−1]) / 1609.34 meters × 100 (%). The pace adjustment A_m = +13 × G_m if G_m > +0.4%, A_m = −8 × G_m if G_m &lt; −1.5%, else A_m = 0 (all in sec/mi). The target pace for mile m is P_m = B + A_m, where B is the base flat pace. The constraint is: Σ(P_m × d_m) = T_goal, where d_m is the distance of segment m (1.0 miles except the last 0.2). Solving for B: B = (T_goal − Σ(A_m × d_m)) / 26.2. Segment ideal paces are then the distance-weighted average of P_m over each of the 4 segments, converted to sec/km."
+      data-it="Per ogni miglio m, pendenza G_m = (elev[m] − elev[m−1]) / 1609.34 × 100 (%). L'aggiustamento passo A_m = +13 × G_m se G_m > +0.4%, A_m = −8 × G_m se G_m &lt; −1.5%, altrimenti A_m = 0 (tutto in sec/mi). Il passo target per il miglio m è P_m = B + A_m. Vincolo: Σ(P_m × d_m) = T_goal. Risolvendo per B: B = (T_goal − Σ(A_m × d_m)) / 26.2. I passi ideali per segmento sono la media pesata per distanza di P_m.">For mile m: grade G_m = Δelev / 1609.34 × 100%. Adjustment A_m = +13×G_m if G_m &gt; 0.4%, −8×G_m if G_m &lt; −1.5%, else 0 (sec/mi). Target pace P_m = B + A_m. Constraint: Σ(P_m × d_m) = T_goal → B = (T_goal − Σ(A_m × d_m)) / 26.2. Segment ideal = distance-weighted mean of P_m over each segment, converted to sec/km.</p>
+    <p style="font-size:.78rem;color:var(--mu2);font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em"
+      data-en="Elevation source: official Boston Marathon mile markers (Daniels/Burfoot via V.O2 News + boston.com archives). Verified against Runners Connect calculator output for multiple goal times."
+      data-it="Fonte dislivello: marker ufficiali Boston Marathon (Daniels/Burfoot via V.O2 News + archivi boston.com). Verificato rispetto all'output del calcolatore Runners Connect per più tempi obiettivo.">Elevation: official Boston mile markers (Daniels/Burfoot). Verified against Runners Connect calculator output for multiple goal times.</p>
+  </div>
+
 </section>
 
 <footer>
-  <div><div class="fb" id="footBrand">@running<span>engineer</span></div><p style="font-size:11px;color:var(--mu);margin-top:.3rem" data-en="Boston Marathon Engineering Analysis" data-it="Analisi Ingegneristica Boston Marathon">Boston Marathon Engineering Analysis</p></div>
+  <div><div class="fb" id="footBrand">@running<span>engineer</span></div>
+    <p style="font-size:10px;color:var(--mu);margin-top:.3rem" data-en="How runners actually race Boston" data-it="Come i runner corrono davvero Boston">How runners actually race Boston</p>
+  </div>
   <div class="fm">
-    <div data-en="Data: BAA official results 2023 + 2025" data-it="Dati: risultati ufficiali BAA 2023 + 2025">Data: BAA official results 2023 + 2025</div>
-    <div data-en="21,985 runners · Men & Women · 2:40–5:00" data-it="21.985 runner · Uomini e Donne · 2:40–5:00">21,985 runners · Men & Women · 2:40–5:00</div>
-    <div style="color:var(--mu2)" data-en="2024 excluded (weather anomaly)" data-it="2024 escluso (meteo anomalo)">2024 excluded (weather anomaly)</div>
+    <div>BAA official results 2023 + 2025 · 2024 excluded</div>
+    <div>21,985 runners · median values · grade-adjusted ideal</div>
   </div>
 </footer>
 
 <script>
-/* ======== DATA ======== */
 const MEN = {
-"2:20":{n:39,po:199.9,p1:195.0,p2:197.5,p3:204.5,p4:205.7,d1:-2.48,d2:-1.22,d3:2.26,d4:2.86,s1:-5.0,s2:-2.4,s3:4.5,s4:5.7,h1:4139,h2:4297,ps:158,neg:5.1,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"2:25":{n:102,po:206.4,p1:200.7,p2:203.2,p3:211.1,p4:214.8,d1:-2.8,d2:-1.58,d3:2.26,d4:4.04,s1:-5.8,s2:-3.3,s3:4.7,s4:8.3,h1:4258,h2:4453,ps:195,neg:8.8,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"2:30":{n:260,po:213.9,p1:208.6,p2:210.6,p3:218.8,p4:221.1,d1:-2.46,d2:-1.52,d3:2.31,d4:3.39,s1:-5.3,s2:-3.3,s3:4.9,s4:7.2,h1:4419,h2:4605,ps:186,neg:10.4,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"2:35":{n:506,po:220.7,p1:215.4,p2:217.3,p3:225.6,p4:228.3,d1:-2.39,d2:-1.54,d3:2.22,d4:3.45,s1:-5.3,s2:-3.4,s3:4.9,s4:7.6,h1:4561,h2:4750,ps:189,neg:12.8,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"2:40":{n:769,po:227.7,p1:223.1,p2:224.2,p3:232.8,p4:234.3,d1:-2.03,d2:-1.53,d3:2.24,d4:2.9,s1:-4.6,s2:-3.5,s3:5.1,s4:6.6,h1:4714,h2:4893,ps:179,neg:16.3,age:{"18-29":3.81,"30-39":2.38,"40-49":2.56,"50-59":null,"60+":null}},
-"2:45":{n:1265,po:234.9,p1:230.2,p2:231.0,p3:240.4,p4:241.8,d1:-1.99,d2:-1.66,d3:2.33,d4:2.97,s1:-4.7,s2:-3.9,s3:5.5,s4:7.0,h1:4861,h2:5050,ps:189,neg:15.7,age:{"18-29":3.2,"30-39":2.77,"40-49":3.08,"50-59":2.67,"60+":null}},
-"2:50":{n:1627,po:241.8,p1:236.5,p2:237.6,p3:247.9,p4:249.3,d1:-2.17,d2:-1.73,d3:2.52,d4:3.13,s1:-5.3,s2:-4.2,s3:6.1,s4:7.6,h1:4995,h2:5206,ps:211,neg:15.4,age:{"18-29":4.13,"30-39":2.95,"40-49":2.6,"50-59":2.45,"60+":null}},
-"2:55":{n:2055,po:249.1,p1:243.1,p2:244.5,p3:255.9,p4:257.6,d1:-2.41,d2:-1.86,d3:2.74,d4:3.42,s1:-6.0,s2:-4.6,s3:6.8,s4:8.5,h1:5137,h2:5373,ps:236,neg:13.8,age:{"18-29":5.04,"30-39":3.79,"40-49":2.32,"50-59":1.89,"60+":null}},
-"3:00":{n:2333,po:255.5,p1:248.7,p2:250.4,p3:263.4,p4:264.5,d1:-2.66,d2:-1.97,d3:3.08,d4:3.53,s1:-6.8,s2:-5.0,s3:7.9,s4:9.0,h1:5257,h2:5523,ps:266,neg:9.3,age:{"18-29":6.49,"30-39":4.09,"40-49":2.62,"50-59":2.13,"60+":1.96}},
-"3:05":{n:1716,po:263.1,p1:253.8,p2:255.9,p3:271.9,p4:278.7,d1:-3.53,d2:-2.74,d3:3.37,d4:5.94,s1:-9.3,s2:-7.2,s3:8.9,s4:15.6,h1:5367,h2:5734,ps:368,neg:7.0,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:10":{n:1739,po:270.1,p1:259.0,p2:262.2,p3:280.7,p4:287.3,d1:-4.11,d2:-2.94,d3:3.94,d4:6.37,s1:-11.1,s2:-8.0,s3:10.6,s4:17.2,h1:5486,h2:5911,ps:426,neg:7.0,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:15":{n:1870,po:277.3,p1:265.7,p2:269.0,p3:289.3,p4:293.9,d1:-4.17,d2:-2.98,d3:4.34,d4:5.99,s1:-11.6,s2:-8.3,s3:12.0,s4:16.6,h1:5626,h2:6073,ps:447,neg:7.9,age:{"18-29":14.4,"30-39":9.78,"40-49":5.47,"50-59":3.69,"60+":4.23}},
-"3:20":{n:1552,po:284.3,p1:271.3,p2:275.2,p3:297.4,p4:303.0,d1:-4.56,d2:-3.19,d3:4.61,d4:6.57,s1:-13.0,s2:-9.1,s3:13.1,s4:18.7,h1:5749,h2:6246,ps:497,neg:6.6,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:25":{n:1546,po:291.5,p1:277.3,p2:282.4,p3:305.2,p4:311.2,d1:-4.87,d2:-3.13,d3:4.7,d4:6.76,s1:-14.2,s2:-9.1,s3:13.7,s4:19.7,h1:5886,h2:6415,ps:529,neg:7.5,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:30":{n:1279,po:298.4,p1:283.6,p2:289.1,p3:313.2,p4:317.6,d1:-4.95,d2:-3.1,d3:4.96,d4:6.44,s1:-14.8,s2:-9.2,s3:14.8,s4:19.2,h1:6023,h2:6566,ps:543,neg:8.1,age:{"18-29":7.11,"30-39":8.02,"40-49":9.42,"50-59":4.99,"60+":3.07}},
-"3:35":{n:1152,po:305.7,p1:288.7,p2:294.6,p3:322.3,p4:329.1,d1:-5.56,d2:-3.6,d3:5.46,d4:7.65,s1:-17.0,s2:-11.0,s3:16.7,s4:23.4,h1:6131,h2:6767,ps:636,neg:5.6,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:40":{n:1012,po:312.8,p1:295.6,p2:301.9,p3:330.2,p4:335.5,d1:-5.5,d2:-3.49,d3:5.54,d4:7.23,s1:-17.2,s2:-10.9,s3:17.3,s4:22.6,h1:6281,h2:6918,ps:637,neg:8.4,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:45":{n:1021,po:319.9,p1:301.9,p2:308.3,p3:338.3,p4:343.3,d1:-5.61,d2:-3.6,d3:5.75,d4:7.33,s1:-18.0,s2:-11.5,s3:18.4,s4:23.5,h1:6412,h2:7085,ps:673,neg:7.1,age:{"18-29":8.24,"30-39":8.78,"40-49":8.91,"50-59":8.03,"60+":4.69}},
-"3:50":{n:984,po:326.9,p1:308.5,p2:315.3,p3:346.1,p4:350.1,d1:-5.63,d2:-3.55,d3:5.86,d4:7.08,s1:-18.4,s2:-11.6,s3:19.2,s4:23.2,h1:6557,h2:7238,ps:681,neg:9.0,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:55":{n:861,po:334.3,p1:315.5,p2:322.0,p3:354.2,p4:358.2,d1:-5.63,d2:-3.67,d3:5.98,d4:7.16,s1:-18.8,s2:-12.3,s3:20.0,s4:23.9,h1:6699,h2:7406,ps:707,neg:8.1,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"4:00":{n:744,po:341.0,p1:320.2,p2:327.6,p3:363.7,p4:366.0,d1:-6.09,d2:-3.9,d3:6.66,d4:7.35,s1:-20.8,s2:-13.3,s3:22.7,s4:25.1,h1:6807,h2:7579,ps:772,neg:6.9,age:{"18-29":8.86,"30-39":7.42,"40-49":6.34,"50-59":7.96,"60+":7.1}},
-"4:15":{n:543,po:362.6,p1:336.1,p2:344.7,p3:389.5,p4:399.6,d1:-7.32,d2:-4.95,d3:7.41,d4:10.2,s1:-26.6,s2:-17.9,s3:26.9,s4:37.0,h1:7142,h2:8158,ps:1016,neg:5.3,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"4:30":{n:414,po:383.8,p1:353.4,p2:366.4,p3:416.1,p4:417.6,d1:-7.93,d2:-4.54,d3:8.42,d4:8.79,s1:-30.4,s2:-17.4,s3:32.3,s4:33.7,h1:7546,h2:8649,ps:1103,neg:4.6,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"4:45":{n:276,po:405.3,p1:364.6,p2:385.0,p3:449.2,p4:443.0,d1:-10.04,d2:-5.0,d3:10.84,d4:9.31,s1:-40.7,s2:-20.3,s3:44.0,s4:37.7,h1:7837,h2:9264,ps:1426,neg:4.0,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"5:00":{n:219,po:426.2,p1:379.6,p2:408.5,p3:471.6,p4:464.5,d1:-10.93,d2:-4.14,d3:10.66,d4:9.01,s1:-46.6,s2:-17.6,s3:45.4,s4:38.4,h1:8239,h2:9743,ps:1505,neg:3.7,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
+"2:20":{n:39,nRaw:39,pctRm:0.0,n23:16,n25:23,q1:103,q2:191,gpEx:33.3,gpFa:33.3,gpBl:33.3,ip1:196.6,ip2:199.6,ip3:201.7,ip4:198.8,po:200.5,ps:134,p1:194.6,p2:197.5,p3:204.8,p4:204.4,d1:-2.0,d2:-2.0,d3:3.1,d4:5.7,negPct:5.1,ex:{n:13,ps:64,p1:198.0,p2:198.7,p3:202.1,p4:201.0,d1:1.4,d2:-0.9,d3:0.4,d4:2.2},fa:{n:13,ps:134,p1:195.7,p2:197.5,p3:204.4,p4:206.9,d1:-0.9,d2:-2.0,d3:2.7,d4:8.2},bl:{n:13,ps:244,p1:193.9,p2:197.1,p3:206.6,p4:208.3,d1:-2.7,d2:-2.5,d3:4.9,d4:9.6}},
+"2:25":{n:96,nRaw:102,pctRm:5.9,n23:38,n25:58,q1:87,q2:199,gpEx:33.3,gpFa:33.3,gpBl:33.3,ip1:203.7,ip2:206.7,ip3:208.8,ip4:205.9,po:206.6,ps:128,p1:202.0,p2:204.2,p3:210.6,p4:211.5,d1:-1.7,d2:-2.5,d3:1.8,d4:5.6,negPct:9.4,ex:{n:32,ps:38,p1:205.6,p2:206.4,p3:208.2,p4:205.4,d1:2.0,d2:-0.3,d3:-0.6,d4:-0.5},fa:{n:32,ps:128,p1:202.3,p2:204.5,p3:211.2,p4:210.3,d1:-1.4,d2:-2.2,d3:2.4,d4:4.4},bl:{n:32,ps:306,p1:197.9,p2:201.0,p3:212.2,p4:222.0,d1:-5.8,d2:-5.7,d3:3.4,d4:16.1}},
+"2:30":{n:254,nRaw:259,pctRm:1.9,n23:114,n25:140,q1:103,q2:219,gpEx:33.1,gpFa:33.9,gpBl:33.1,ip1:210.8,ip2:213.8,ip3:215.9,ip4:213.0,po:214.0,ps:165,p1:209.6,p2:210.8,p3:218.3,p4:219.5,d1:-1.2,d2:-3.0,d3:2.4,d4:6.4,negPct:10.6,ex:{n:84,ps:34,p1:213.1,p2:213.6,p3:216.5,p4:212.7,d1:2.3,d2:-0.2,d3:0.6,d4:-0.3},fa:{n:86,ps:165,p1:209.6,p2:210.8,p3:218.3,p4:219.4,d1:-1.2,d2:-3.0,d3:2.4,d4:6.4},bl:{n:84,ps:342,p1:203.3,p2:208.7,p3:222.4,p4:228.0,d1:-7.5,d2:-5.1,d3:6.5,d4:15.0}},
+"2:35":{n:487,nRaw:505,pctRm:3.6,n23:212,n25:275,q1:81,q2:225,gpEx:33.1,gpFa:33.9,gpBl:33.1,ip1:217.9,ip2:220.9,ip3:223.0,ip4:220.1,po:220.9,ps:153,p1:216.5,p2:217.9,p3:225.1,p4:225.6,d1:-1.4,d2:-3.0,d3:2.1,d4:5.4,negPct:13.3,ex:{n:161,ps:17,p1:220.3,p2:220.5,p3:222.7,p4:218.6,d1:2.4,d2:-0.4,d3:-0.3,d4:-1.5},fa:{n:165,ps:153,p1:216.8,p2:218.0,p3:225.2,p4:225.7,d1:-1.1,d2:-2.9,d3:2.2,d4:5.6},bl:{n:161,ps:350,p1:210.3,p2:214.3,p3:229.0,p4:235.9,d1:-7.6,d2:-6.6,d3:6.0,d4:15.7}},
+"2:40":{n:735,nRaw:767,pctRm:4.2,n23:326,n25:409,q1:66,q2:213,gpEx:33.2,gpFa:34.1,gpBl:32.7,ip1:225.0,ip2:228.0,ip3:230.1,ip4:227.2,po:227.8,ps:133,p1:224.2,p2:225.1,p3:232.4,p4:231.4,d1:-0.8,d2:-2.9,d3:2.3,d4:4.2,negPct:17.0,ex:{n:244,ps:-2,p1:228.4,p2:227.1,p3:229.6,p4:224.5,d1:3.4,d2:-0.9,d3:-0.5,d4:-2.7},fa:{n:251,ps:133,p1:224.2,p2:225.1,p3:232.2,p4:231.5,d1:-0.8,d2:-2.9,d3:2.1,d4:4.3},bl:{n:240,ps:317,p1:218.6,p2:221.6,p3:235.8,p4:240.7,d1:-6.4,d2:-6.4,d3:5.7,d4:13.5}},
+"2:45":{n:1221,nRaw:1262,pctRm:3.2,n23:545,n25:676,q1:69,q2:220,gpEx:33.1,gpFa:34.0,gpBl:32.9,ip1:232.1,ip2:235.1,ip3:237.2,ip4:234.4,po:235.0,ps:145,p1:231.4,p2:231.7,p3:239.7,p4:239.1,d1:-0.7,d2:-3.4,d3:2.5,d4:4.7,negPct:16.3,ex:{n:404,ps:2,p1:235.8,p2:234.3,p3:237.2,p4:231.7,d1:3.7,d2:-0.8,d3:-0.0,d4:-2.7},fa:{n:415,ps:145,p1:231.5,p2:232.0,p3:239.8,p4:239.1,d1:-0.6,d2:-3.1,d3:2.6,d4:4.7},bl:{n:402,ps:342,p1:225.6,p2:228.2,p3:243.6,p4:250.6,d1:-6.5,d2:-6.9,d3:6.3,d4:16.2}},
+"2:50":{n:1564,nRaw:1624,pctRm:3.7,n23:733,n25:831,q1:84,q2:248,gpEx:33.2,gpFa:33.8,gpBl:33.0,ip1:239.3,ip2:242.3,ip3:244.3,ip4:241.5,po:241.7,ps:158,p1:237.7,p2:238.5,p3:247.1,p4:246.1,d1:-1.6,d2:-3.8,d3:2.8,d4:4.7,negPct:16.0,ex:{n:519,ps:2,p1:242.8,p2:241.1,p3:244.2,p4:237.9,d1:3.5,d2:-1.1,d3:-0.1,d4:-3.5},fa:{n:529,ps:159,p1:237.6,p2:238.6,p3:247.4,p4:246.0,d1:-1.7,d2:-3.7,d3:3.1,d4:4.5},bl:{n:516,ps:379,p1:231.9,p2:234.4,p3:251.2,p4:258.1,d1:-7.4,d2:-7.9,d3:6.8,d4:16.6}},
+"2:55":{n:1949,nRaw:2050,pctRm:4.9,n23:1005,n25:944,q1:94,q2:267,gpEx:33.0,gpFa:34.1,gpBl:32.8,ip1:246.4,ip2:249.4,ip3:251.5,ip4:248.6,po:249.2,ps:175,p1:244.6,p2:245.6,p3:255.0,p4:254.2,d1:-1.8,d2:-3.8,d3:3.5,d4:5.6,negPct:14.5,ex:{n:644,ps:11,p1:249.8,p2:248.6,p3:252.2,p4:245.4,d1:3.4,d2:-0.8,d3:0.7,d4:-3.1},fa:{n:665,ps:177,p1:244.7,p2:245.7,p3:255.1,p4:254.2,d1:-1.7,d2:-3.7,d3:3.6,d4:5.6},bl:{n:640,ps:405,p1:238.2,p2:241.4,p3:259.3,p4:266.0,d1:-8.1,d2:-8.0,d3:7.8,d4:17.4}},
+"3:00":{n:2222,nRaw:2329,pctRm:4.6,n23:1167,n25:1055,q1:130,q2:296,gpEx:33.1,gpFa:34.0,gpBl:32.9,ip1:253.5,ip2:256.5,ip3:258.6,ip4:255.7,po:255.2,ps:198,p1:250.2,p2:251.6,p3:262.3,p4:260.9,d1:-3.3,d2:-4.9,d3:3.7,d4:5.2,negPct:9.8,ex:{n:735,ps:45,p1:254.8,p2:253.9,p3:259.1,p4:252.4,d1:1.3,d2:-2.6,d3:0.5,d4:-3.3},fa:{n:755,ps:198,p1:250.2,p2:251.7,p3:262.1,p4:261.0,d1:-3.3,d2:-4.8,d3:3.5,d4:5.3},bl:{n:732,ps:430,p1:243.6,p2:248.0,p3:267.4,p4:273.0,d1:-9.9,d2:-8.5,d3:8.8,d4:17.3}},
+"3:05":{n:1560,nRaw:1716,pctRm:9.1,n23:819,n25:741,q1:211,q2:405,gpEx:33.3,gpFa:33.7,gpBl:33.0,ip1:260.6,ip2:263.6,ip3:265.7,ip4:262.8,po:263.0,ps:303,p1:255.1,p2:256.8,p3:271.0,p4:273.8,d1:-5.5,d2:-6.8,d3:5.3,d4:11.0,negPct:7.7,ex:{n:520,ps:100,p1:261.5,p2:260.7,p3:267.5,p4:262.8,d1:0.9,d2:-2.9,d3:1.8,d4:0.0},fa:{n:525,ps:304,p1:255.0,p2:256.6,p3:271.0,p4:274.1,d1:-5.6,d2:-7.0,d3:5.3,d4:11.3},bl:{n:515,ps:527,p1:248.9,p2:253.7,p3:275.8,p4:287.0,d1:-11.7,d2:-9.9,d3:10.1,d4:24.2}},
+"3:10":{n:1529,nRaw:1738,pctRm:12.0,n23:768,n25:761,q1:201,q2:462,gpEx:33.1,gpFa:33.9,gpBl:33.0,ip1:267.7,ip2:270.7,ip3:272.8,ip4:269.9,po:269.9,ps:336,p1:261.5,p2:264.0,p3:279.4,p4:281.2,d1:-6.2,d2:-6.7,d3:6.6,d4:11.2,negPct:7.9,ex:{n:506,ps:72,p1:268.6,p2:268.6,p3:274.9,p4:268.5,d1:0.9,d2:-2.1,d3:2.1,d4:-1.4},fa:{n:518,ps:336,p1:261.5,p2:263.7,p3:279.5,p4:281.7,d1:-6.2,d2:-7.1,d3:6.7,d4:11.8},bl:{n:505,ps:614,p1:252.9,p2:258.7,p3:286.1,p4:295.2,d1:-14.8,d2:-12.1,d3:13.3,d4:25.3}},
+"3:15":{n:1621,nRaw:1868,pctRm:13.2,n23:842,n25:779,q1:193,q2:440,gpEx:33.2,gpFa:33.9,gpBl:32.9,ip1:274.8,ip2:277.8,ip3:279.9,ip4:277.0,po:277.1,ps:309,p1:268.6,p2:271.5,p3:286.8,p4:286.7,d1:-6.2,d2:-6.3,d3:6.9,d4:9.7,negPct:8.9,ex:{n:538,ps:76,p1:276.6,p2:275.8,p3:282.1,p4:275.4,d1:1.8,d2:-2.1,d3:2.2,d4:-1.6},fa:{n:549,ps:310,p1:268.7,p2:271.4,p3:286.5,p4:286.9,d1:-6.1,d2:-6.4,d3:6.6,d4:9.8},bl:{n:534,ps:649,p1:259.0,p2:266.3,p3:294.7,p4:301.6,d1:-15.9,d2:-11.5,d3:14.8,d4:24.6}},
+"3:20":{n:1332,nRaw:1551,pctRm:14.1,n23:719,n25:613,q1:226,q2:482,gpEx:33.1,gpFa:33.9,gpBl:33.0,ip1:281.9,ip2:285.0,ip3:287.0,ip4:284.2,po:284.2,ps:341,p1:275.3,p2:277.9,p3:294.5,p4:294.6,d1:-6.6,d2:-7.1,d3:7.5,d4:10.5,negPct:7.7,ex:{n:441,ps:101,p1:283.1,p2:281.7,p3:289.5,p4:283.5,d1:1.2,d2:-3.2,d3:2.5,d4:-0.6},fa:{n:451,ps:341,p1:275.3,p2:277.9,p3:294.2,p4:295.2,d1:-6.6,d2:-7.0,d3:7.2,d4:11.0},bl:{n:440,ps:667,p1:265.5,p2:272.7,p3:301.6,p4:309.7,d1:-16.4,d2:-12.3,d3:14.6,d4:25.6}},
+"3:25":{n:1328,nRaw:1544,pctRm:14.0,n23:705,n25:623,q1:246,q2:508,gpEx:33.1,gpFa:34.0,gpBl:32.8,ip1:289.1,ip2:292.1,ip3:294.2,ip4:291.3,po:291.5,ps:366,p1:281.0,p2:285.1,p3:301.7,p4:302.8,d1:-8.0,d2:-7.0,d3:7.5,d4:11.6,negPct:8.7,ex:{n:440,ps:101,p1:290.2,p2:289.6,p3:296.6,p4:291.7,d1:1.1,d2:-2.5,d3:2.4,d4:0.4},fa:{n:452,ps:368,p1:281.0,p2:285.2,p3:301.8,p4:303.3,d1:-8.1,d2:-6.8,d3:7.6,d4:12.0},bl:{n:436,ps:710,p1:271.8,p2:279.7,p3:310.4,p4:317.9,d1:-17.2,d2:-12.4,d3:16.2,d4:26.7}},
+"3:30":{n:1075,nRaw:1277,pctRm:15.8,n23:553,n25:522,q1:243,q2:507,gpEx:33.1,gpFa:34.0,gpBl:32.9,ip1:296.2,ip2:299.2,ip3:301.3,ip4:298.4,po:298.2,ps:359,p1:288.1,p2:292.0,p3:309.8,p4:308.7,d1:-8.1,d2:-7.2,d3:8.5,d4:10.3,negPct:9.6,ex:{n:356,ps:88,p1:296.4,p2:296.5,p3:304.2,p4:295.1,d1:0.2,d2:-2.7,d3:2.9,d4:-3.3},fa:{n:365,ps:360,p1:288.4,p2:292.1,p3:309.8,p4:309.1,d1:-7.8,d2:-7.0,d3:8.5,d4:10.7},bl:{n:354,ps:721,p1:277.5,p2:287.0,p3:319.0,p4:324.8,d1:-18.7,d2:-12.2,d3:17.7,d4:26.4}},
+"3:35":{n:939,nRaw:1150,pctRm:18.3,n23:468,n25:471,q1:283,q2:575,gpEx:33.0,gpFa:34.1,gpBl:32.9,ip1:303.3,ip2:306.3,ip3:308.4,ip4:305.5,po:305.6,ps:413,p1:293.8,p2:297.9,p3:317.9,p4:318.8,d1:-9.5,d2:-8.4,d3:9.5,d4:13.3,negPct:6.8,ex:{n:310,ps:144,p1:303.3,p2:302.5,p3:312.1,p4:305.9,d1:0.0,d2:-3.8,d3:3.7,d4:0.4},fa:{n:320,ps:414,p1:293.7,p2:298.0,p3:317.8,p4:319.1,d1:-9.6,d2:-8.3,d3:9.4,d4:13.6},bl:{n:309,ps:760,p1:284.0,p2:293.2,p3:327.3,p4:334.1,d1:-19.3,d2:-13.1,d3:18.9,d4:28.6}},
+"3:40":{n:822,nRaw:1012,pctRm:18.8,n23:426,n25:396,q1:280,q2:618,gpEx:33.0,gpFa:34.1,gpBl:33.0,ip1:310.4,ip2:313.4,ip3:315.5,ip4:312.6,po:312.8,ps:452,p1:300.2,p2:305.3,p3:326.0,p4:326.3,d1:-10.2,d2:-8.1,d3:10.5,d4:13.7,negPct:10.0,ex:{n:271,ps:90,p1:311.4,p2:310.9,p3:319.9,p4:309.8,d1:1.0,d2:-2.5,d3:4.4,d4:-2.8},fa:{n:280,ps:452,p1:300.2,p2:304.8,p3:326.0,p4:327.0,d1:-10.2,d2:-8.6,d3:10.5,d4:14.4},bl:{n:271,ps:804,p1:289.9,p2:299.5,p3:335.9,p4:341.8,d1:-20.5,d2:-13.9,d3:20.4,d4:29.1}},
+"3:45":{n:823,nRaw:1019,pctRm:19.2,n23:425,n25:398,q1:261,q2:602,gpEx:33.0,gpFa:34.0,gpBl:32.9,ip1:317.5,ip2:320.5,ip3:322.6,ip4:319.7,po:319.7,ps:432,p1:308.8,p2:312.6,p3:333.3,p4:331.5,d1:-8.7,d2:-7.9,d3:10.7,d4:11.7,negPct:8.9,ex:{n:272,ps:96,p1:318.2,p2:317.5,p3:325.4,p4:318.1,d1:0.7,d2:-3.0,d3:2.8,d4:-1.6},fa:{n:280,ps:432,p1:308.6,p2:312.5,p3:333.3,p4:331.8,d1:-8.9,d2:-8.0,d3:10.7,d4:12.0},bl:{n:271,ps:855,p1:295.6,p2:306.3,p3:344.9,p4:349.1,d1:-21.9,d2:-14.3,d3:22.3,d4:29.4}},
+"3:50":{n:804,nRaw:983,pctRm:18.2,n23:421,n25:383,q1:290,q2:660,gpEx:33.1,gpFa:34.0,gpBl:33.0,ip1:324.6,ip2:327.6,ip3:329.7,ip4:326.9,po:326.8,ps:475,p1:313.9,p2:318.9,p3:341.3,p4:340.5,d1:-10.7,d2:-8.7,d3:11.6,d4:13.7,negPct:11.1,ex:{n:266,ps:92,p1:325.6,p2:324.4,p3:333.5,p4:323.3,d1:1.0,d2:-3.2,d3:3.8,d4:-3.5},fa:{n:273,ps:477,p1:313.8,p2:318.5,p3:341.3,p4:341.5,d1:-10.8,d2:-9.1,d3:11.6,d4:14.6},bl:{n:265,ps:884,p1:301.8,p2:313.1,p3:351.3,p4:357.7,d1:-22.8,d2:-14.5,d3:21.6,d4:30.9}},
+"3:55":{n:692,nRaw:859,pctRm:19.4,n23:363,n25:329,q1:316,q2:678,gpEx:33.1,gpFa:33.8,gpBl:33.1,ip1:331.7,ip2:334.8,ip3:336.8,ip4:334.0,po:334.4,ps:501,p1:320.8,p2:325.7,p3:349.5,p4:348.4,d1:-10.9,d2:-9.0,d3:12.7,d4:14.4,negPct:9.8,ex:{n:229,ps:117,p1:333.9,p2:330.9,p3:340.9,p4:332.5,d1:2.2,d2:-3.8,d3:4.1,d4:-1.5},fa:{n:234,ps:501,p1:320.8,p2:326.0,p3:349.4,p4:348.7,d1:-10.9,d2:-8.8,d3:12.6,d4:14.7},bl:{n:229,ps:915,p1:307.8,p2:319.5,p3:360.8,p4:364.6,d1:-23.9,d2:-15.3,d3:24.0,d4:30.6}},
+"4:00":{n:607,nRaw:743,pctRm:18.3,n23:300,n25:307,q1:379,q2:735,gpEx:32.9,gpFa:34.3,gpBl:32.8,ip1:338.9,ip2:341.9,ip3:344.0,ip4:341.1,po:340.6,ps:546,p1:326.3,p2:331.4,p3:358.6,p4:355.8,d1:-12.6,d2:-10.5,d3:14.6,d4:14.7,negPct:8.2,ex:{n:200,ps:150,p1:337.6,p2:336.8,p3:349.1,p4:338.0,d1:-1.2,d2:-5.0,d3:5.1,d4:-3.1},fa:{n:208,ps:546,p1:326.4,p2:331.4,p3:358.6,p4:357.1,d1:-12.5,d2:-10.5,d3:14.7,d4:16.0},bl:{n:199,ps:970,p1:313.7,p2:324.8,p3:370.9,p4:373.7,d1:-25.2,d2:-17.1,d3:26.9,d4:32.7}},
+"4:15":{n:395,nRaw:542,pctRm:27.1,n23:223,n25:172,q1:499,q2:957,gpEx:33.7,gpFa:33.2,gpBl:33.2,ip1:360.2,ip2:363.2,ip3:365.3,ip4:362.4,po:362.7,ps:747,p1:344.0,p2:350.0,p3:384.3,p4:386.4,d1:-16.2,d2:-13.2,d3:19.0,d4:24.0,negPct:7.3,ex:{n:133,ps:253,p1:357.9,p2:356.1,p3:373.1,p4:365.9,d1:-2.3,d2:-7.1,d3:7.8,d4:3.5},fa:{n:131,ps:749,p1:343.5,p2:349.5,p3:384.2,p4:387.2,d1:-16.7,d2:-13.7,d3:18.9,d4:24.8},bl:{n:131,ps:1165,p1:330.9,p2:343.1,p3:398.5,p4:400.4,d1:-29.3,d2:-20.1,d3:33.2,d4:38.0}},
+"4:30":{n:296,nRaw:414,pctRm:28.5,n23:146,n25:150,q1:571,q2:966,gpEx:33.1,gpFa:33.8,gpBl:33.1,ip1:381.6,ip2:384.6,ip3:386.6,ip4:383.8,po:383.6,ps:772,p1:363.2,p2:372.6,p3:408.0,p4:401.5,d1:-18.4,d2:-11.9,d3:21.3,d4:17.7,negPct:5.7,ex:{n:98,ps:300,p1:377.6,p2:380.2,p3:396.8,p4:384.5,d1:-4.0,d2:-4.3,d3:10.1,d4:0.7},fa:{n:100,ps:772,p1:364.4,p2:371.6,p3:407.2,p4:404.4,d1:-17.2,d2:-12.9,d3:20.5,d4:20.7},bl:{n:98,ps:1244,p1:349.2,p2:365.9,p3:422.6,p4:418.8,d1:-32.4,d2:-18.7,d3:35.9,d4:35.0}},
+"4:45":{n:178,nRaw:276,pctRm:35.5,n23:93,n25:85,q1:718,q2:1261,gpEx:33.1,gpFa:33.7,gpBl:33.1,ip1:402.9,ip2:405.9,ip3:408.0,ip4:405.1,po:405.2,ps:958,p1:378.2,p2:392.8,p3:437.0,p4:426.0,d1:-24.7,d2:-13.1,d3:29.0,d4:20.9,negPct:6.2,ex:{n:59,ps:391,p1:395.1,p2:400.4,p3:420.3,p4:407.2,d1:-7.8,d2:-5.5,d3:12.3,d4:2.1},fa:{n:60,ps:958,p1:377.6,p2:391.5,p3:437.5,p4:428.6,d1:-25.2,d2:-14.4,d3:29.5,d4:23.5},bl:{n:59,ps:1498,p1:363.1,p2:386.7,p3:451.7,p4:444.1,d1:-39.8,d2:-19.2,d3:43.7,d4:38.9}},
+"5:00":{n:136,nRaw:219,pctRm:37.9,n23:72,n25:64,q1:886,q2:1321,gpEx:33.1,gpFa:33.8,gpBl:33.1,ip1:424.2,ip2:427.2,ip3:429.3,ip4:426.5,po:426.1,ps:1098,p1:392.1,p2:414.2,p3:460.0,p4:453.1,d1:-32.1,d2:-13.1,d3:30.6,d4:26.6,negPct:3.7,ex:{n:45,ps:536,p1:409.2,p2:423.3,p3:446.5,p4:433.5,d1:-15.0,d2:-3.9,d3:17.2,d4:7.0},fa:{n:46,ps:1098,p1:391.4,p2:413.6,p3:461.4,p4:454.6,d1:-32.8,d2:-13.7,d3:32.0,d4:28.2},bl:{n:45,ps:1504,p1:378.0,p2:408.1,p3:473.2,p4:466.2,d1:-46.2,d2:-19.2,d3:43.9,d4:39.7}},
 };
+
 const WOMEN = {
-"2:55":{n:226,po:249.4,p1:246.2,p2:246.5,p3:254.9,p4:252.4,d1:-1.29,d2:-1.18,d3:2.2,d4:1.2,s1:-3.2,s2:-2.9,s3:5.5,s4:3.0,h1:5194,h2:5331,ps:136,neg:23.0,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:00":{n:360,po:255.9,p1:252.1,p2:252.5,p3:262.7,p4:259.0,d1:-1.5,d2:-1.33,d3:2.64,d4:1.19,s1:-3.8,s2:-3.4,s3:6.8,s4:3.1,h1:5317,h2:5481,ps:165,neg:18.1,age:{"18-29":1.15,"30-39":1.15,"40-49":1.44,"50-59":null,"60+":null}},
-"3:05":{n:511,po:263.4,p1:258.2,p2:258.8,p3:270.9,p4:269.7,d1:-1.96,d2:-1.74,d3:2.85,d4:2.39,s1:-5.2,s2:-4.6,s3:7.5,s4:6.3,h1:5448,h2:5667,ps:219,neg:15.3,age:{"18-29":2.66,"30-39":1.95,"40-49":2.66,"50-59":null,"60+":null}},
-"3:10":{n:797,po:270.3,p1:265.5,p2:266.2,p3:278.1,p4:274.7,d1:-1.78,d2:-1.52,d3:2.88,d4:1.63,s1:-4.8,s2:-4.1,s3:7.8,s4:4.4,h1:5601,h2:5806,ps:205,neg:18.6,age:{"18-29":1.87,"30-39":1.4,"40-49":1.61,"50-59":1.79,"60+":null}},
-"3:15":{n:1169,po:277.4,p1:272.3,p2:273.4,p3:285.8,p4:281.2,d1:-1.83,d2:-1.45,d3:3.01,d4:1.38,s1:-5.1,s2:-4.0,s3:8.4,s4:3.8,h1:5747,h2:5958,ps:210,neg:19.2,age:{"18-29":1.43,"30-39":1.2,"40-49":1.45,"50-59":2.55,"60+":null}},
-"3:20":{n:1330,po:284.5,p1:278.3,p2:280.0,p3:293.5,p4:289.8,d1:-2.17,d2:-1.57,d3:3.18,d4:1.87,s1:-6.2,s2:-4.5,s3:9.1,s4:5.3,h1:5880,h2:6123,ps:243,neg:16.4,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:25":{n:1557,po:291.5,p1:284.0,p2:286.5,p3:301.5,p4:298.2,d1:-2.56,d2:-1.7,d3:3.45,d4:2.3,s1:-7.5,s2:-4.9,s3:10.0,s4:6.7,h1:6008,h2:6291,ps:283,neg:13.7,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:30":{n:1614,po:298.5,p1:290.0,p2:292.9,p3:309.8,p4:306.6,d1:-2.87,d2:-1.89,d3:3.77,d4:2.7,s1:-8.6,s2:-5.6,s3:11.2,s4:8.1,h1:6136,h2:6460,ps:324,neg:10.0,age:{"18-29":4.02,"30-39":2.98,"40-49":2.27,"50-59":1.59,"60+":null}},
-"3:35":{n:1559,po:305.8,p1:295.4,p2:299.0,p3:318.9,p4:316.2,d1:-3.39,d2:-2.23,d3:4.28,d4:3.4,s1:-10.4,s2:-6.8,s3:13.1,s4:10.4,h1:6255,h2:6649,ps:394,neg:9.1,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:40":{n:1434,po:312.9,p1:301.3,p2:306.2,p3:327.0,p4:323.2,d1:-3.71,d2:-2.13,d3:4.52,d4:3.31,s1:-11.6,s2:-6.7,s3:14.1,s4:10.3,h1:6393,h2:6809,ps:416,neg:8.6,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:45":{n:1379,po:319.9,p1:306.9,p2:312.6,p3:335.0,p4:332.0,d1:-4.07,d2:-2.27,d3:4.73,d4:3.81,s1:-13.0,s2:-7.3,s3:15.1,s4:12.2,h1:6517,h2:6980,ps:463,neg:8.8,age:{"18-29":5.85,"30-39":5.02,"40-49":3.58,"50-59":2.6,"60+":4.0}},
-"3:50":{n:1259,po:327.0,p1:313.2,p2:319.3,p3:342.9,p4:340.0,d1:-4.21,d2:-2.35,d3:4.87,d4:3.98,s1:-13.8,s2:-7.7,s3:15.9,s4:13.0,h1:6653,h2:7143,ps:491,neg:7.4,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"3:55":{n:1099,po:334.1,p1:318.3,p2:325.9,p3:352.4,p4:347.8,d1:-4.74,d2:-2.46,d3:5.47,d4:4.11,s1:-15.8,s2:-8.2,s3:18.3,s4:13.7,h1:6773,h2:7325,ps:552,neg:6.5,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"4:00":{n:937,po:341.0,p1:324.2,p2:332.8,p3:360.4,p4:354.8,d1:-4.95,d2:-2.43,d3:5.68,d4:4.03,s1:-16.9,s2:-8.3,s3:19.4,s4:13.8,h1:6903,h2:7488,ps:585,neg:6.2,age:{"18-29":3.42,"30-39":3.32,"40-49":5.0,"50-59":3.93,"60+":3.24}},
-"4:05":{n:761,po:348.3,p1:328.7,p2:338.3,p3:369.9,p4:366.4,d1:-5.64,d2:-2.87,d3:6.19,d4:5.2,s1:-19.6,s2:-10.0,s3:21.6,s4:18.1,h1:7006,h2:7691,ps:685,neg:5.1,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"4:10":{n:712,po:355.4,p1:334.2,p2:345.1,p3:377.6,p4:375.5,d1:-5.98,d2:-2.89,d3:6.25,d4:5.65,s1:-21.2,s2:-10.3,s3:22.2,s4:20.1,h1:7135,h2:7862,ps:727,neg:4.4,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"4:15":{n:662,po:362.6,p1:341.4,p2:351.8,p3:386.4,p4:381.5,d1:-5.86,d2:-2.98,d3:6.56,d4:5.23,s1:-21.2,s2:-10.8,s3:23.8,s4:19.0,h1:7278,h2:8021,ps:743,neg:6.2,age:{"18-29":4.88,"30-39":4.49,"40-49":6.24,"50-59":6.12,"60+":3.57}},
-"4:30":{n:460,po:383.7,p1:356.5,p2:371.5,p3:413.8,p4:405.0,d1:-7.08,d2:-3.17,d3:7.84,d4:5.56,s1:-27.2,s2:-12.2,s3:30.1,s4:21.3,h1:7630,h2:8560,ps:929,neg:5.7,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"4:45":{n:338,po:405.2,p1:375.6,p2:393.8,p3:436.7,p4:426.4,d1:-7.32,d2:-2.81,d3:7.76,d4:5.24,s1:-29.7,s2:-11.4,s3:31.5,s4:21.2,h1:8064,h2:9034,ps:970,neg:5.0,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
-"5:00":{n:286,po:426.3,p1:390.6,p2:415.9,p3:464.7,p4:443.9,d1:-8.36,d2:-2.42,d3:9.01,d4:4.14,s1:-35.6,s2:-10.3,s3:38.4,s4:17.6,h1:8447,h2:9539,ps:1092,neg:4.5,age:{"18-29":null,"30-39":null,"40-49":null,"50-59":null,"60+":null}},
+"2:55":{n:225,nRaw:226,pctRm:0.4,n23:89,n25:136,q1:57,q2:183,gpEx:33.3,gpFa:33.8,gpBl:32.9,ip1:246.4,ip2:249.4,ip3:251.5,ip4:248.6,po:249.6,ps:124,p1:246.9,p2:246.9,p3:254.4,p4:251.1,d1:0.5,d2:-2.4,d3:2.9,d4:2.6,negPct:23.1,ex:{n:75,ps:-23,p1:251.6,p2:249.3,p3:252.4,p4:244.3,d1:5.2,d2:-0.1,d3:0.9,d4:-4.2},fa:{n:76,ps:124,p1:246.8,p2:247.0,p3:254.4,p4:250.9,d1:0.5,d2:-2.3,d3:3.0,d4:2.4},bl:{n:74,ps:316,p1:241.0,p2:243.6,p3:258.6,p4:259.6,d1:-5.3,d2:-5.8,d3:7.2,d4:11.0}},
+"3:00":{n:354,nRaw:358,pctRm:1.1,n23:168,n25:186,q1:80,q2:210,gpEx:33.1,gpFa:33.9,gpBl:33.1,ip1:253.5,ip2:256.5,ip3:258.6,ip4:255.7,po:255.8,ps:146,p1:252.7,p2:252.7,p3:262.1,p4:257.7,d1:-0.8,d2:-3.8,d3:3.5,d4:2.0,negPct:18.4,ex:{n:117,ps:-11,p1:257.7,p2:254.5,p3:258.1,p4:250.3,d1:4.2,d2:-2.0,d3:-0.5,d4:-5.4},fa:{n:120,ps:146,p1:252.7,p2:252.7,p3:262.1,p4:257.9,d1:-0.8,d2:-3.8,d3:3.5,d4:2.2},bl:{n:117,ps:315,p1:247.3,p2:250.7,p3:267.1,p4:265.5,d1:-6.2,d2:-5.8,d3:8.5,d4:9.8}},
+"3:05":{n:499,nRaw:508,pctRm:1.8,n23:211,n25:288,q1:110,q2:291,gpEx:33.1,gpFa:34.1,gpBl:32.9,ip1:260.6,ip2:263.6,ip3:265.7,ip4:262.8,po:263.7,ps:199,p1:258.7,p2:259.1,p3:270.3,p4:267.1,d1:-1.9,d2:-4.5,d3:4.6,d4:4.3,negPct:15.6,ex:{n:165,ps:5,p1:265.3,p2:262.3,p3:267.1,p4:260.3,d1:4.7,d2:-1.3,d3:1.4,d4:-2.5},fa:{n:170,ps:199,p1:258.7,p2:258.9,p3:270.3,p4:267.6,d1:-1.9,d2:-4.7,d3:4.6,d4:4.8},bl:{n:164,ps:405,p1:252.5,p2:255.3,p3:276.0,p4:277.6,d1:-8.1,d2:-8.3,d3:10.3,d4:14.7}},
+"3:10":{n:789,nRaw:797,pctRm:1.0,n23:330,n25:459,q1:77,q2:286,gpEx:33.1,gpFa:33.8,gpBl:33.1,ip1:267.7,ip2:270.7,ip3:272.8,ip4:269.9,po:270.5,ps:158,p1:266.6,p2:266.8,p3:277.6,p4:272.8,d1:-1.1,d2:-3.9,d3:4.8,d4:2.9,negPct:18.8,ex:{n:261,ps:-16,p1:272.3,p2:269.5,p3:272.8,p4:264.6,d1:4.6,d2:-1.2,d3:-0.0,d4:-5.3},fa:{n:267,ps:158,p1:266.8,p2:266.9,p3:277.9,p4:272.7,d1:-0.9,d2:-3.9,d3:5.1,d4:2.8},bl:{n:261,ps:433,p1:258.3,p2:262.3,p3:283.7,p4:284.5,d1:-9.4,d2:-8.5,d3:10.9,d4:14.6}},
+"3:15":{n:1156,nRaw:1168,pctRm:1.0,n23:504,n25:652,q1:91,q2:273,gpEx:33.2,gpFa:33.7,gpBl:33.0,ip1:274.8,ip2:277.8,ip3:279.9,ip4:277.0,po:277.5,ps:174,p1:273.2,p2:273.6,p3:285.0,p4:279.7,d1:-1.6,d2:-4.2,d3:5.1,d4:2.7,negPct:19.5,ex:{n:384,ps:-22,p1:279.8,p2:276.9,p3:280.2,p4:271.9,d1:5.0,d2:-0.9,d3:0.3,d4:-5.1},fa:{n:390,ps:176,p1:273.1,p2:273.6,p3:284.8,p4:279.8,d1:-1.7,d2:-4.3,d3:4.9,d4:2.7},bl:{n:382,ps:435,p1:265.3,p2:269.9,p3:291.4,p4:289.8,d1:-9.5,d2:-7.9,d3:11.4,d4:12.7}},
+"3:20":{n:1298,nRaw:1324,pctRm:2.0,n23:592,n25:706,q1:103,q2:308,gpEx:33.2,gpFa:33.8,gpBl:33.0,ip1:281.9,ip2:285.0,ip3:287.0,ip4:284.2,po:284.4,ps:206,p1:279.5,p2:280.3,p3:292.6,p4:288.3,d1:-2.4,d2:-4.6,d3:5.6,d4:4.1,negPct:16.8,ex:{n:431,ps:-1,p1:286.2,p2:283.7,p3:287.5,p4:278.8,d1:4.3,d2:-1.3,d3:0.5,d4:-5.4},fa:{n:439,ps:206,p1:279.5,p2:280.3,p3:292.4,p4:288.5,d1:-2.4,d2:-4.6,d3:5.4,d4:4.4},bl:{n:428,ps:463,p1:271.0,p2:276.4,p3:298.7,p4:298.6,d1:-10.9,d2:-8.6,d3:11.7,d4:14.4}},
+"3:25":{n:1522,nRaw:1555,pctRm:2.1,n23:769,n25:753,q1:131,q2:356,gpEx:33.0,gpFa:34.0,gpBl:32.9,ip1:289.1,ip2:292.1,ip3:294.2,ip4:291.3,po:291.5,ps:234,p1:285.1,p2:287.4,p3:300.5,p4:296.0,d1:-4.0,d2:-4.6,d3:6.3,d4:4.8,negPct:14.0,ex:{n:503,ps:22,p1:292.2,p2:290.5,p3:295.9,p4:286.6,d1:3.1,d2:-1.5,d3:1.7,d4:-4.7},fa:{n:518,ps:236,p1:285.2,p2:287.4,p3:300.5,p4:296.3,d1:-3.8,d2:-4.7,d3:6.3,d4:5.0},bl:{n:501,ps:506,p1:276.9,p2:283.1,p3:307.0,p4:308.0,d1:-12.2,d2:-9.0,d3:12.8,d4:16.7}},
+"3:30":{n:1582,nRaw:1612,pctRm:1.9,n23:823,n25:759,q1:174,q2:397,gpEx:33.0,gpFa:34.0,gpBl:33.0,ip1:296.2,ip2:299.2,ip3:301.3,ip4:298.4,po:298.4,ps:284,p1:291.3,p2:293.5,p3:308.5,p4:304.8,d1:-4.9,d2:-5.6,d3:7.2,d4:6.4,negPct:10.2,ex:{n:522,ps:54,p1:298.2,p2:296.7,p3:303.7,p4:294.9,d1:2.1,d2:-2.5,d3:2.4,d4:-3.5},fa:{n:538,ps:284,p1:291.4,p2:293.4,p3:308.7,p4:305.1,d1:-4.8,d2:-5.8,d3:7.4,d4:6.8},bl:{n:522,ps:565,p1:282.4,p2:289.4,p3:315.7,p4:316.4,d1:-13.8,d2:-9.8,d3:14.4,d4:18.0}},
+"3:35":{n:1502,nRaw:1556,pctRm:3.5,n23:799,n25:703,q1:203,q2:470,gpEx:33.0,gpFa:34.0,gpBl:33.0,ip1:303.3,ip2:306.3,ip3:308.4,ip4:305.5,po:305.8,ps:342,p1:297.0,p2:300.0,p3:317.3,p4:313.3,d1:-6.3,d2:-6.3,d3:8.9,d4:7.8,negPct:9.5,ex:{n:496,ps:82,p1:305.4,p2:303.7,p3:311.2,p4:303.1,d1:2.1,d2:-2.6,d3:2.8,d4:-2.4},fa:{n:511,ps:343,p1:297.0,p2:299.8,p3:317.4,p4:314.0,d1:-6.3,d2:-6.5,d3:9.0,d4:8.5},bl:{n:495,ps:663,p1:287.1,p2:295.3,p3:325.6,p4:326.2,d1:-16.2,d2:-11.0,d3:17.2,d4:20.7}},
+"3:40":{n:1385,nRaw:1432,pctRm:3.3,n23:726,n25:659,q1:225,q2:511,gpEx:33.2,gpFa:33.9,gpBl:32.9,ip1:310.4,ip2:313.4,ip3:315.5,ip4:312.6,po:312.8,ps:353,p1:302.9,p2:307.1,p3:325.4,p4:320.9,d1:-7.5,d2:-6.3,d3:9.9,d4:8.3,negPct:9.0,ex:{n:460,ps:100,p1:311.3,p2:310.9,p3:319.5,p4:310.4,d1:0.9,d2:-2.5,d3:4.0,d4:-2.3},fa:{n:469,ps:354,p1:302.9,p2:306.9,p3:325.1,p4:321.8,d1:-7.5,d2:-6.5,d3:9.6,d4:9.1},bl:{n:456,ps:687,p1:292.3,p2:302.1,p3:333.6,p4:334.3,d1:-18.1,d2:-11.3,d3:18.1,d4:21.6}},
+"3:45":{n:1300,nRaw:1377,pctRm:5.6,n23:651,n25:649,q1:250,q2:542,gpEx:33.0,gpFa:34.1,gpBl:32.9,ip1:317.5,ip2:320.5,ip3:322.6,ip4:319.7,po:319.8,ps:384,p1:309.2,p2:313.7,p3:333.1,p4:329.0,d1:-8.4,d2:-6.8,d3:10.5,d4:9.2,negPct:9.3,ex:{n:429,ps:92,p1:317.9,p2:318.1,p3:326.5,p4:316.6,d1:0.4,d2:-2.4,d3:3.9,d4:-3.1},fa:{n:443,ps:385,p1:309.4,p2:313.4,p3:333.1,p4:330.0,d1:-8.1,d2:-7.1,d3:10.5,d4:10.2},bl:{n:428,ps:730,p1:297.9,p2:308.7,p3:341.1,p4:342.2,d1:-19.6,d2:-11.8,d3:18.5,d4:22.4}},
+"3:50":{n:1186,nRaw:1258,pctRm:5.7,n23:620,n25:566,q1:259,q2:565,gpEx:33.1,gpFa:33.8,gpBl:33.1,ip1:324.6,ip2:327.6,ip3:329.7,ip4:326.9,po:326.8,ps:396,p1:315.6,p2:320.5,p3:340.8,p4:335.1,d1:-9.0,d2:-7.1,d3:11.1,d4:8.2,negPct:7.8,ex:{n:393,ps:113,p1:324.6,p2:324.5,p3:334.2,p4:324.1,d1:-0.0,d2:-3.2,d3:4.5,d4:-2.7},fa:{n:401,ps:397,p1:315.7,p2:320.3,p3:340.6,p4:335.8,d1:-8.9,d2:-7.3,d3:10.9,d4:8.9},bl:{n:392,ps:771,p1:303.8,p2:315.7,p3:350.9,p4:349.8,d1:-20.8,d2:-11.9,d3:21.2,d4:23.0}},
+"3:55":{n:1025,nRaw:1099,pctRm:6.7,n23:524,n25:501,q1:315,q2:628,gpEx:33.2,gpFa:34.0,gpBl:32.8,ip1:331.7,ip2:334.8,ip3:336.8,ip4:334.0,po:334.1,ps:454,p1:321.0,p2:327.3,p3:349.9,p4:343.8,d1:-10.7,d2:-7.4,d3:13.1,d4:9.9,negPct:6.9,ex:{n:340,ps:153,p1:330.6,p2:331.3,p3:342.6,p4:332.2,d1:-1.1,d2:-3.5,d3:5.8,d4:-1.8},fa:{n:349,ps:456,p1:321.1,p2:327.0,p3:349.7,p4:344.8,d1:-10.6,d2:-7.8,d3:12.9,d4:10.9},bl:{n:336,ps:837,p1:308.5,p2:322.5,p3:360.0,p4:358.1,d1:-23.2,d2:-12.3,d3:23.2,d4:24.1}},
+"4:00":{n:871,nRaw:935,pctRm:6.8,n23:446,n25:425,q1:351,q2:658,gpEx:33.1,gpFa:34.0,gpBl:33.0,ip1:338.9,ip2:341.9,ip3:344.0,ip4:341.1,po:340.8,ps:492,p1:326.9,p2:334.1,p3:358.0,p4:352.1,d1:-12.0,d2:-7.7,d3:14.0,d4:11.0,negPct:6.5,ex:{n:288,ps:168,p1:337.1,p2:337.6,p3:350.2,p4:337.6,d1:-1.8,d2:-4.3,d3:6.2,d4:-3.5},fa:{n:296,ps:492,p1:326.9,p2:333.8,p3:357.8,p4:352.3,d1:-12.0,d2:-8.1,d3:13.8,d4:11.2},bl:{n:287,ps:897,p1:312.6,p2:328.7,p3:369.0,p4:365.9,d1:-26.3,d2:-13.1,d3:25.0,d4:24.9}},
+"4:05":{n:692,nRaw:761,pctRm:9.1,n23:344,n25:348,q1:422,q2:769,gpEx:33.1,gpFa:33.8,gpBl:33.1,ip1:346.0,ip2:349.0,ip3:351.1,ip4:348.2,po:348.3,ps:611,p1:330.5,p2:339.8,p3:367.3,p4:361.7,d1:-15.5,d2:-9.2,d3:16.2,d4:13.5,negPct:5.6,ex:{n:229,ps:220,p1:342.7,p2:344.9,p3:359.0,p4:348.2,d1:-3.3,d2:-4.1,d3:7.9,d4:-0.0},fa:{n:234,ps:611,p1:330.3,p2:339.4,p3:368.0,p4:362.7,d1:-15.7,d2:-9.6,d3:16.9,d4:14.5},bl:{n:229,ps:981,p1:318.7,p2:334.9,p3:377.7,p4:376.1,d1:-27.3,d2:-14.1,d3:26.6,d4:27.9}},
+"4:10":{n:637,nRaw:712,pctRm:10.5,n23:321,n25:316,q1:451,q2:812,gpEx:33.1,gpFa:33.9,gpBl:33.0,ip1:353.1,ip2:356.1,ip3:358.2,ip4:355.3,po:355.3,ps:616,p1:336.7,p2:346.7,p3:375.1,p4:370.1,d1:-16.4,d2:-9.4,d3:16.9,d4:14.8,negPct:4.7,ex:{n:211,ps:229,p1:350.4,p2:352.4,p3:366.4,p4:355.8,d1:-2.7,d2:-3.7,d3:8.2,d4:0.5},fa:{n:216,ps:616,p1:336.2,p2:346.7,p3:375.0,p4:371.2,d1:-16.9,d2:-9.4,d3:16.9,d4:15.9},bl:{n:210,ps:1038,p1:324.6,p2:340.8,p3:386.6,p4:386.9,d1:-28.5,d2:-15.3,d3:28.4,d4:31.6}},
+"4:15":{n:595,nRaw:662,pctRm:10.1,n23:307,n25:288,q1:439,q2:867,gpEx:33.3,gpFa:33.6,gpBl:33.1,ip1:360.2,ip2:363.2,ip3:365.3,ip4:362.4,po:362.8,ps:662,p1:343.4,p2:353.3,p3:382.9,p4:378.0,d1:-16.8,d2:-9.9,d3:17.6,d4:15.6,negPct:6.6,ex:{n:198,ps:219,p1:359.6,p2:358.9,p3:372.7,p4:363.3,d1:-0.6,d2:-4.3,d3:7.4,d4:0.9},fa:{n:200,ps:662,p1:343.0,p2:353.2,p3:383.4,p4:379.2,d1:-17.2,d2:-10.0,d3:18.1,d4:16.7},bl:{n:197,ps:1068,p1:330.0,p2:347.1,p3:395.5,p4:392.4,d1:-30.2,d2:-16.1,d3:30.2,d4:29.9}},
+"4:30":{n:378,nRaw:460,pctRm:17.8,n23:182,n25:196,q1:485,q2:995,gpEx:33.1,gpFa:33.9,gpBl:33.1,ip1:381.6,ip2:384.6,ip3:386.6,ip4:383.8,po:383.5,ps:728,p1:361.6,p2:374.3,p3:408.8,p4:396.3,d1:-20.0,d2:-10.3,d3:22.2,d4:12.5,negPct:6.9,ex:{n:125,ps:255,p1:379.0,p2:380.3,p3:396.8,p4:380.8,d1:-2.6,d2:-4.3,d3:10.2,d4:-2.9},fa:{n:128,ps:728,p1:361.6,p2:374.8,p3:408.0,p4:396.7,d1:-20.0,d2:-9.7,d3:21.4,d4:12.9},bl:{n:125,ps:1272,p1:346.5,p2:367.7,p3:423.7,p4:419.2,d1:-35.1,d2:-16.9,d3:37.1,d4:35.4}},
+"4:45":{n:297,nRaw:338,pctRm:12.1,n23:155,n25:142,q1:608,q2:1042,gpEx:33.0,gpFa:34.0,gpBl:33.0,ip1:402.9,ip2:405.9,ip3:408.0,ip4:405.1,po:405.0,ps:808,p1:379.8,p2:396.2,p3:433.3,p4:419.6,d1:-23.1,d2:-9.7,d3:25.3,d4:14.5,negPct:5.7,ex:{n:98,ps:342,p1:395.7,p2:402.0,p3:419.8,p4:403.1,d1:-7.2,d2:-3.9,d3:11.8,d4:-2.1},fa:{n:101,ps:808,p1:379.9,p2:395.1,p3:433.0,p4:421.1,d1:-23.0,d2:-10.8,d3:25.0,d4:16.0},bl:{n:98,ps:1290,p1:364.2,p2:391.0,p3:444.0,p4:433.4,d1:-38.7,d2:-14.9,d3:36.0,d4:28.3}},
+"5:00":{n:243,nRaw:286,pctRm:15.0,n23:134,n25:109,q1:668,q2:1236,gpEx:32.9,gpFa:35.0,gpBl:32.1,ip1:424.2,ip2:427.2,ip3:429.3,ip4:426.5,po:426.0,ps:1010,p1:394.7,p2:417.5,p3:459.1,p4:437.1,d1:-29.5,d2:-9.8,d3:29.8,d4:10.6,negPct:5.3,ex:{n:80,ps:304,p1:412.4,p2:425.7,p3:445.0,p4:419.2,d1:-11.8,d2:-1.5,d3:15.6,d4:-7.2},fa:{n:85,ps:1015,p1:394.1,p2:417.2,p3:460.6,p4:439.5,d1:-30.1,d2:-10.0,d3:31.3,d4:13.0},bl:{n:78,ps:1438,p1:378.1,p2:411.9,p3:472.6,p4:459.1,d1:-46.1,d2:-15.3,d3:43.3,d4:32.6}},
 };
 
-const NOTES_EN_M = {
-"2:20":"Near-elite bucket (n=39, 2023+2025). Extremely small sample — treat with caution. Average positive split 2:38, the lowest of any group. Pacing profile is remarkably controlled: Seg.4 deviation of just +2.86%, the best of any men\'s bucket.",
-"2:25":"Sub-elite (n=102). Positive split avg 3:15. These runners show a low and consistent deviation across all segments. Very few start the first downhill recklessly.",
-"2:30":"Strong amateur elite (n=260). Positive split avg 3:06 — impressively even. Seg.4 deviation +3.39%, nearly as controlled as the 2:40 bucket. Experience and fitness both high.",
-"2:35":"Amateur elite (n=506). Positive split avg 3:09. Excellent control of the first 10K (−5.3 sec/km). The Newton Hills cost just +4.9 sec/km — the best hill management of any bucket below 2:40.",
-"2:40":"Elite bucket (n=769). The downhill gives +4.6 sec/km advantage that burns quads. Average positive split: 2:59. Only 16% go negative. Target: cross halfway in 1:18:34.",
-"2:45":"Sub-elite (n=1265). Positive split avg 3:09. Focus on Seg.2 consistency. Newton Hills cost +5.5 sec/km vs your average.",
-"2:50":"Positive split avg 3:31. Ideal halfway ~1:23:15. The downhill pulls you to ~3:56/km — resist. Seg.4 costs everyone +7.6 sec/km.",
-"2:55":"Positive split avg 3:56. Newton Hills cost +6.8 sec/km. Critical: 25K in ~1:43:05 — if behind, adjust now.",
-"3:00":"Psychological barrier. Positive split avg 4:26. Only 9% negative. 25K checkpoint: ~1:45:17.",
-"3:05":"Note jump: positive split rises to 6:08 here (vs 4:26 at 3:00). The pacing challenge increases significantly after the sub-3:00 runners.",
-"3:10":"Positive split avg 7:06. Seg.4 deviation reaches +17.2 sec/km. Managing the early excitement becomes critical.",
-"3:15":"Positive split avg 7:27. Under-30 runners lose +14.4% in Seg.4 vs +3.7% for 50-59. Experience pays off here.",
-"3:20":"Positive split avg 8:17. Start conservative — the downhill temptation is strong but Seg.4 at +18.7 sec/km is punishing.",
-"3:25":"Positive split avg 8:49. If you hit 25K at target, you're in good shape for the hills.",
-"3:30":"Positive split avg 9:03. Seg.4 costs +19.2 sec/km. Protect your quad strength in the first 10K.",
-"3:35":"Positive split avg 10:36. The gap between Seg.1 advantage (−17 sec/km) and Seg.4 debt (+23.4 sec/km) is the story of this race.",
-"3:40":"Positive split avg 10:37. At this pace, arriving at the hills with good legs is worth more than time banked.",
-"3:45":"Positive split avg 11:13. Seg.4 at +23.5 sec/km. Primary goal: intact quads at km 25.",
-"3:50":"Positive split avg 11:21. Think effort, not pace. Let the hills come to you.",
-"3:55":"Positive split avg 11:47. Strong finish from 35K requires a disciplined first 25K.",
-"4:00":"Positive split avg 12:52. Seg.1 temptation: −20.8 sec/km bonus becomes +25.1 sec/km debt in Seg.4.",
-"4:15":"Positive split avg 16:56. The gap between Seg.1 and Seg.4 is 63 sec/km — huge. Run Seg.1 by effort, not by GPS.",
-"4:30":"Positive split avg 18:23. Fuel heavily from km 20 — the tank is running dry by Seg.4.",
-"4:45":"Positive split avg 23:46. At this bucket the hills are a major factor. Walk breaks on Heartbreak Hill are valid tactics.",
-"5:00":"Positive split avg 25:05. Seg.3 deviation reaches +45.4 sec/km. A disciplined first half can save your finish."
-};
-const NOTES_IT_M = {
-"2:20":"Fascia quasi-élite (n=39, 2023+2025). Campione molto piccolo — usare con cautela. Positive split medio di 2:38, il più basso di tutti i gruppi. Profilo di passo notevolmente controllato: deviazione Seg.4 di solo +2.86%.",
-"2:25":"Sub-élite (n=102). Positive split medio 3:15. Questi runner mostrano una deviazione bassa e costante in tutti i segmenti. Pochissimi partono troppo forte nella discesa iniziale.",
-"2:30":"Élite amatoriale forte (n=260). Positive split medio 3:06 — notevolmente uniforme. Deviazione Seg.4 +3.39%, quasi al livello della fascia 2:40. Esperienza e forma fisica entrambe elevate.",
-"2:35":"Élite amatoriale (n=506). Positive split medio 3:09. Ottimo controllo dei primi 10K (−5.3 sec/km). Le Newton Hills costano solo +4.9 sec/km — la migliore gestione delle colline di qualsiasi fascia sotto le 2:40.",
-"2:40":"Fascia élite (n=769). La discesa dona +4.6 sec/km ma brucia i quad. Positive split medio: 2:59. Solo il 16% fa negative split. Target: mezza in 1:18:34.",
-"2:45":"Sub-élite (n=1265). Positive split medio 3:09. Concentrati sulla consistenza nel Seg.2. Le Newton Hills costano +5.5 sec/km.",
-"2:50":"Positive split medio 3:31. Mezza ideale ~1:23:15. La discesa ti porta a ~3:56/km — resisti. Il Seg.4 costerà +7.6 sec/km a tutti.",
-"2:55":"Positive split medio 3:56. Newton Hills costano +6.8 sec/km. Critico: 25K in ~1:43:05.",
-"3:00":"Soglia psicologica. Positive split medio 4:26. Solo il 9% fa negative split. Checkpoint 25K: ~1:45:17.",
-"3:05":"Nota: il positive split sale a 6:08 qui (vs 4:26 a 3:00). La sfida del passo aumenta significativamente dopo i sub-3:00.",
-"3:10":"Positive split medio 7:06. La deviazione Seg.4 raggiunge +17.2 sec/km. Gestire l'entusiasmo iniziale diventa critico.",
-"3:15":"Positive split medio 7:27. I runner under 30 perdono +14.4% nel Seg.4 vs +3.7% dei 50-59. L'esperienza paga.",
-"3:20":"Positive split medio 8:17. Parti conservativo — la tentazione della discesa è forte ma il Seg.4 a +18.7 sec/km è punitivo.",
-"3:25":"Positive split medio 8:49. Se sei al passo a 25K, sei in buona posizione per le colline.",
-"3:30":"Positive split medio 9:03. Il Seg.4 costa +19.2 sec/km. Proteggi la forza dei quadricipiti nei primi 10K.",
-"3:35":"Positive split medio 10:36. Il gap tra vantaggio Seg.1 (−17 sec/km) e debito Seg.4 (+23.4 sec/km) è la storia di questa gara.",
-"3:40":"Positive split medio 10:37. Arrivare alle colline con le gambe buone vale più del tempo in banca.",
-"3:45":"Positive split medio 11:13. Seg.4 a +23.5 sec/km. Obiettivo primario: quad integri al km 25.",
-"3:50":"Positive split medio 11:21. Pensa allo sforzo, non al passo. Lascia che le colline vengano a te.",
-"3:55":"Positive split medio 11:47. Un finale forte da 35K richiede un primo 25K disciplinato.",
-"4:00":"Positive split medio 12:52. La tentazione del Seg.1 (−20.8 sec/km) diventa debito Seg.4 (+25.1 sec/km).",
-"4:15":"Positive split medio 16:56. Il gap Seg.1-Seg.4 è 63 sec/km. Corri il Seg.1 a sforzo, non col GPS.",
-"4:30":"Positive split medio 18:23. Rifornisciti molto dal km 20 — il serbatoio si svuota nel Seg.4.",
-"4:45":"Positive split medio 23:46. Le colline sono un fattore enorme. Le pause camminate su Heartbreak Hill sono tatticamente valide.",
-"5:00":"Positive split medio 25:05. La deviazione Seg.3 raggiunge +45.4 sec/km. Una prima metà disciplinata può salvare il finale."
-};
-const NOTES_EN_W = {
-"2:55":"Elite women's bucket (n=226). Best-managed group: 23% go negative split — highest of any group. Average positive split only 2:16.",
-"3:00":"Sub-elite (n=360). Positive split avg 2:45. Women in this range show notably lower Seg.4 fade than equivalent men.",
-"3:05":"Positive split avg 3:39. Newton Hills cost +7.5 sec/km. Control the first 10K and the savings compound.",
-"3:10":"Positive split avg 3:25. 19% go negative — excellent group. Women here pace very consistently.",
-"3:15":"Positive split avg 3:30. Best women's negative split rate outside the elite bucket. 25K target: ~1:48:07.",
-"3:20":"Positive split avg 4:03. Still a well-managed bucket. Seg.4 deviation at +5.3 sec/km is relatively low.",
-"3:25":"Positive split avg 4:43. The key is getting to 25K with legs. Target: 25K in ~1:50:30.",
-"3:30":"Positive split avg 5:24. Seg.4 costs +8.1 sec/km. A disciplined first 10K pays dividends late.",
-"3:35":"Positive split avg 6:34. Seg.3 starts to bite more here — +13.1 sec/km on the hills.",
-"3:40":"Positive split avg 6:56. Think of Seg.2 as your investment phase. Don't spend it all early.",
-"3:45":"Positive split avg 7:43. Seg.4 at +12.2 sec/km. Protect quad strength through the downhill start.",
-"3:50":"Positive split avg 8:11. Effort consistency matters more than pace consistency on this course.",
-"3:55":"Positive split avg 9:12. The hills take +18.3 sec/km here. Budget for a significant slowdown on Seg.3.",
-"4:00":"Positive split avg 9:45. Seg.4 at +13.8 sec/km — less than men at equivalent time, reinforcing the consistent female pacing trend.",
-"4:05":"Positive split avg 11:25. The gap between Seg.1 gain and Seg.4 cost widens. Run the first mile easy.",
-"4:10":"Positive split avg 12:07. Fuel early and often — the Newton Hills at mile 16+ demand reserves.",
-"4:15":"Positive split avg 12:23. Seg.3 costs +23.8 sec/km. Heartbreak Hill feels harder than it looks; train specifically for it.",
-"4:30":"Positive split avg 15:29. Consider a walk-run strategy through Newton Hills to preserve energy for the final downhill.",
-"4:45":"Positive split avg 16:10. The finish down Boylston Street is yours if you survive Heartbreak with energy left.",
-"5:00":"Positive split avg 18:12. Any finish on Boylston is a victory. Run smart, fuel well, enjoy every mile."
-};
-const NOTES_IT_W = {
-"2:55":"Fascia élite donne (n=226). Gruppo meglio gestito: il 23% fa negative split — il massimo di qualsiasi gruppo. Positive split medio solo 2:16.",
-"3:00":"Sub-élite (n=360). Positive split medio 2:45. Le donne qui mostrano meno calo nel Seg.4 rispetto agli uomini equivalenti.",
-"3:05":"Positive split medio 3:39. Le Newton Hills costano +7.5 sec/km. Controlla i primi 10K e il risparmio si moltiplica.",
-"3:10":"Positive split medio 3:25. Il 19% fa negative split — gruppo eccellente. Le donne qui pacano molto costantemente.",
-"3:15":"Positive split medio 3:30. Miglior tasso di negative split fuori dalla fascia élite. Target 25K: ~1:48:07.",
-"3:20":"Positive split medio 4:03. Ancora un bucket ben gestito. La deviazione Seg.4 a +5.3 sec/km è relativamente bassa.",
-"3:25":"Positive split medio 4:43. La chiave è arrivare a 25K con le gambe. Target: 25K in ~1:50:30.",
-"3:30":"Positive split medio 5:24. Il Seg.4 costa +8.1 sec/km. Un primo 10K disciplinato paga nel finale.",
-"3:35":"Positive split medio 6:34. Il Seg.3 inizia a mordere di più — +13.1 sec/km sulle colline.",
-"3:40":"Positive split medio 6:56. Pensa al Seg.2 come alla tua fase di investimento. Non spendere tutto presto.",
-"3:45":"Positive split medio 7:43. Seg.4 a +12.2 sec/km. Proteggi la forza dei quad nella discesa iniziale.",
-"3:50":"Positive split medio 8:11. La consistenza dello sforzo conta più della consistenza del passo su questo percorso.",
-"3:55":"Positive split medio 9:12. Le colline costano +18.3 sec/km qui. Pianifica un rallentamento significativo nel Seg.3.",
-"4:00":"Positive split medio 9:45. Seg.4 a +13.8 sec/km — meno degli uomini al tempo equivalente.",
-"4:05":"Positive split medio 11:25. Il gap tra guadagno Seg.1 e costo Seg.4 si allarga. Corri il primo km facile.",
-"4:10":"Positive split medio 12:07. Rifornisciti presto e spesso — le Newton Hills al miglio 16+ richiedono riserve.",
-"4:15":"Positive split medio 12:23. Il Seg.3 costa +23.8 sec/km. Heartbreak Hill è più dura di quello che sembra.",
-"4:30":"Positive split medio 15:29. Considera una strategia corsa-camminata attraverso le Newton Hills per preservare energia.",
-"4:45":"Positive split medio 16:10. Boylston Street è tua se sopravvivi a Heartbreak con energia rimasta.",
-"5:00":"Positive split medio 18:12. Qualsiasi arrivo su Boylston è una vittoria. Corri intelligente, mangia bene, goditi ogni miglio."
-};
-
-const MCOLS_M = {"2:20":"#a29bfe","2:25":"#6c5ce7","2:30":"#fd79a8","2:35":"#e84393","2:40":"#3498db","2:45":"#2ecc71","2:50":"#27ae60","2:55":"#f39c12","3:00":"#e67e22","3:05":"#d35400","3:10":"#e74c3c","3:15":"#c0392b","3:20":"#9b59b6","3:25":"#8e44ad","3:30":"#e91e8c","3:35":"#ad1457","3:40":"#1abc9c","3:45":"#16a085","3:50":"#3498db","3:55":"#2980b9","4:00":"#888","4:15":"#666","4:30":"#555","4:45":"#444","5:00":"#333"};
-const MCOLS_W = {"2:55":"#ff85b3","3:00":"#e91e8c","3:05":"#d81b60","3:10":"#c2185b","3:15":"#ad1457","3:20":"#9c27b0","3:25":"#7b1fa2","3:30":"#6a1b9a","3:35":"#4a148c","3:40":"#3f51b5","3:45":"#283593","3:50":"#1565c0","3:55":"#0d47a1","4:00":"#01579b","4:05":"#006064","4:10":"#004d40","4:15":"#1b5e20","4:30":"#558b2f","4:45":"#827717","5:00":"#555"};
-
-const SEGS = [
-  {en:"Seg.1 downhill",it:"Seg.1 discesa",col:"#2ecc71",pk:"p1",dk:"d1",sk:"s1"},
-  {en:"Seg.2 flat",it:"Seg.2 piatta",col:"#3498db",pk:"p2",dk:"d2",sk:"s2"},
-  {en:"Seg.3 Newton Hills",it:"Seg.3 Newton Hills",col:"#e74c3c",pk:"p3",dk:"d3",sk:"s3"},
-  {en:"Seg.4 finale",it:"Seg.4 finale",col:"#f39c12",pk:"p4",dk:"d4",sk:"s4"},
+const BCOLS_M={"2:20":"#a29bfe","2:25":"#6c5ce7","2:30":"#fd79a8","2:35":"#e84393","2:40":"#3498db","2:45":"#2ecc71","2:50":"#27ae60","2:55":"#f39c12","3:00":"#e67e22","3:05":"#d35400","3:10":"#e74c3c","3:15":"#c0392b","3:20":"#9b59b6","3:25":"#8e44ad","3:30":"#e91e8c","3:35":"#ad1457","3:40":"#1abc9c","3:45":"#16a085","3:50":"#3498db","3:55":"#2980b9","4:00":"#888","4:15":"#666","4:30":"#555","4:45":"#444","5:00":"#333"};
+const BCOLS_W={"2:55":"#ff85b3","3:00":"#e91e8c","3:05":"#d81b60","3:10":"#c2185b","3:15":"#ad1457","3:20":"#9c27b0","3:25":"#7b1fa2","3:30":"#6a1b9a","3:35":"#4a148c","3:40":"#3f51b5","3:45":"#283593","3:50":"#1565c0","3:55":"#0d47a1","4:00":"#01579b","4:05":"#006064","4:10":"#004d40","4:15":"#1b5e20","4:30":"#558b2f","4:45":"#827717","5:00":"#555"};
+const SN_EN=["Seg.1 Downhill","Seg.2 Flat","Seg.3 Newton Hills","Seg.4 Finale"];
+const SN_IT=["Seg.1 Discesa","Seg.2 Piatta","Seg.3 Newton Hills","Seg.4 Finale"];
+const SN_MI=["Seg.1 0-6mi","Seg.2 6-15mi","Seg.3 15-22mi","Seg.4 22-26mi"];
+const SEG_META=[
+  {en:"Seg.1 downhill",it:"Seg.1 discesa",km_m:"0-10 km",km_i:"0-6.2 mi",elev_m:"-91 m",elev_i:"-299 ft",col:"#2ecc71",pi:0},
+  {en:"Seg.2 flat",    it:"Seg.2 piatta", km_m:"10-25 km",km_i:"6.2-15.5 mi",elev_m:"±0 m",elev_i:"±0 ft",col:"#3498db",pi:1},
+  {en:"Seg.3 Newton",  it:"Seg.3 Newton", km_m:"25-35 km",km_i:"15.5-21.7 mi",elev_m:"+58 m",elev_i:"+190 ft",col:"#e74c3c",pi:2},
+  {en:"Seg.4 finale",  it:"Seg.4 finale", km_m:"35-42.2 km",km_i:"21.7-26.2 mi",elev_m:"-38 m",elev_i:"-125 ft",col:"#f39c12",pi:3},
 ];
-const SEG_KM_EN=["0–10 km","10–25 km","25–35 km","35–42.2 km"];
-const SEG_KM_IT=["0–10 km","10–25 km","25–35 km","35–42.2 km"];
-const SEG_MI=["0–6.2 mi","6.2–15.5 mi","15.5–21.7 mi","21.7–26.2 mi"];
-const SEG_ELEV_M=["−91 m","±0 m","+58 m","−38 m"];
-const SEG_ELEV_I=["−299 ft","±0 ft","+190 ft","−125 ft"];
+const NOTES_EN={
+  "2:40":"Executed runners resisted the downhill: +3.4 s/km above ideal in Seg.1. Blowup runners banked 6.4 s/km below ideal. That 10 s/km gap transfers almost exactly to Seg.4 (+13.5 s/km). The math is cold.",
+  "2:45":"The executed group ran Seg.1 almost 7 sec/km slower than blowup runners. Over 10 km that is 70 seconds of margin — which is exactly what separates a strong Boylston finish from a survival shuffle.",
+  "2:50":"Blowup runners enter the Newton Hills running 7.9 sec/km faster than ideal overall. Heartbreak Hill at mile 20 with an empty tank is a categorically different race than Heartbreak with reserves.",
+  "2:55":"The executed group is the only one where Seg.4 is close to ideal. The blowup group loses +17.4 sec/km in Seg.4 — on a downhill. That is not a course problem. That is a Seg.1 decision problem.",
+  "3:00":"Only 9% negative split. Even the executed group runs a slight positive split — but by design, not failure. The faded and blowup groups overspent early and paid in full.",
+  "3:15":"Under-30 runners disproportionately populate the blowup group. The excitement of race day overwhelms pacing discipline.",
+  "3:30":"The executed group still manages near-ideal Seg.4 at this pace — demonstrating disciplined pacing is achievable at any finish time.",
+  "3:45":"Seg.4 blowup delta exceeds +20 sec/km. The executed group is in a different race from the blowup group entirely.",
+  "4:00":"Outlier removal at 18%. The pattern is identical: executed resists Seg.1, blowup doesn't, Seg.4 reflects the cost.",
+  "4:30":"At 4:30, the grade adjustment provides ~20 sec/km of gift speed in Seg.1. The blowup group takes all of it and more.",
+  "5:00":"Nearly 38% outlier removal. Of the cleaned runners, the pattern holds. Boston's challenge is scale-invariant.",
+};
+const NOTES_IT={
+  "2:40":"I runner executed hanno resistito alla discesa: +3.4 s/km sopra l'ideale nel Seg.1. I runner blowup hanno anticipato 6.4 s/km sotto l'ideale. Quel gap di 10 s/km si trasferisce quasi esattamente al Seg.4.",
+  "2:45":"Il gruppo executed ha corso il Seg.1 quasi 7 sec/km più lento dei runner blowup. Su 10 km sono 70 secondi di margine.",
+  "2:50":"I runner blowup entrano nelle Newton Hills 7.9 sec/km più veloci dell'ideale. Heartbreak con il serbatoio vuoto è una gara diversa.",
+  "2:55":"Il gruppo executed è l'unico con il Seg.4 vicino all'ideale. Il gruppo blowup perde +17.4 sec/km nel Seg.4 — in discesa.",
+  "3:00":"Solo il 9% fa negative split. Anche il gruppo executed corre un leggero positive split — ma per design, non per fallimento.",
+};
 
 let gender="M", units="metric", lang="en", curBkt="2:40";
-let charts={radar:null,dev:null,sec:null,ps:null,neg:null,age:null,g:null};
+const CH={};
+const GR="rgba(255,255,255,.04)", GT="#555";
 
 function D(){ return gender==="M"?MEN:WOMEN; }
-function BC(){ return gender==="M"?MCOLS_M:MCOLS_W; }
+function BC(){ return gender==="M"?BCOLS_M:BCOLS_W; }
 function bkts(){ return Object.keys(D()); }
-function notes(b){ return (lang==="en"?(gender==="M"?NOTES_EN_M:NOTES_EN_W):(gender==="M"?NOTES_IT_M:NOTES_IT_W))[b]||""; }
-
-function fmtPace(spk){
-  const v=units==="imperial"?spk*1.60934:spk;
-  const s=Math.round(v); return Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60;
-}
-function fmtT(s){ s=Math.round(s); const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60; return h>0?h+":"+(m<10?"0":"")+m+":"+(sc<10?"0":"")+sc:m+":"+(sc<10?"0":"")+sc; }
 function pu(){ return units==="imperial"?"/mi":"/km"; }
-function fmtS(v){ const x=units==="imperial"?v*1.60934:v; return (x>=0?"+":"")+x.toFixed(1)+"s"+(units==="imperial"?"/mi":"/km"); }
+function sn(){ return units==="imperial"?SN_MI:(lang==="en"?SN_EN:SN_IT); }
+function adj(v){ return v==null?null:(units==="imperial"?+(v*1.60934).toFixed(1):+v); }
+function fmtP(spk){ const s=Math.round(units==="imperial"?spk*1.60934:spk); return Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60; }
+function fmtT(s){ s=Math.round(s); const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60; return h>0?h+":"+(m<10?"0":"")+m+":"+(sc<10?"0":"")+sc:m+":"+(sc<10?"0":"")+sc; }
+function fmtPS(s){ if(s==null) return "-"; return (s>=0?"+":"")+fmtT(Math.abs(s)); }
+function dc(k){ if(CH[k]){ CH[k].destroy(); delete CH[k]; } }
+function el(id){ return document.getElementById(id); }
 
 function setGender(g){
   gender=g;
-  document.getElementById("tbM").classList.toggle("active",g==="M");
-  document.getElementById("tbF").classList.toggle("active",g==="F");
-  document.body.className=document.body.className.replace(/gender-[MF]/g,"")+" gender-"+g;
-  const accentCol = g==="F"?"var(--wc)":"var(--ac)";
-  document.getElementById("tbF").style.background=g==="F"?"var(--wc)":"";
-  document.getElementById("tbM").style.background=g==="M"?"var(--ac)":"";
-  curBkt=bkts()[0];
-  buildAll();
+  el("tbM").classList.toggle("active",g==="M"); el("tbF").classList.toggle("active",g==="F");
+  el("tbM").style.background=g==="M"?"var(--ac)":"";
+  el("tbF").style.background=g==="F"?"var(--wc)":"";
+  curBkt=bkts()[0]; buildAll();
 }
 function setUnits(u){
   units=u;
-  document.getElementById("tbKm").classList.toggle("active",u==="metric");
-  document.getElementById("tbMi").classList.toggle("active",u==="imperial");
+  el("tbKm").classList.toggle("active",u==="metric"); el("tbMi").classList.toggle("active",u==="imperial");
   document.body.classList.toggle("imperial",u==="imperial");
   buildAll();
 }
 function setLang(l){
   lang=l;
-  document.getElementById("tbEN").classList.toggle("active",l==="en");
-  document.getElementById("tbIT").classList.toggle("active",l==="it");
-  // Update handle display
-  const handle = l==="en"?"@runningengineer":"@runningingegnere";
-  document.getElementById("handleDisplay").textContent=handle;
-  document.getElementById("navBrand").innerHTML=l==="en"?'@running<span>engineer</span>':'@running<span>ingegnere</span>';
-  document.getElementById("footBrand").innerHTML=l==="en"?'@running<span>engineer</span>':'@running<span>ingegnere</span>';
-  // Update all data-en/data-it elements
-  document.querySelectorAll("[data-"+l+"]").forEach(el=>{ const v=el.getAttribute("data-"+l); if(v) el.textContent=v; });
+  el("tbEN").classList.toggle("active",l==="en"); el("tbIT").classList.toggle("active",l==="it");
+  el("handleDisplay").textContent=l==="en"?"@runningengineer":"@runningingegnere";
+  el("navBrand").innerHTML=l==="en"?"@running<span>engineer</span>":"@running<span>ingegnere</span>";
+  el("footBrand").innerHTML=l==="en"?"@running<span>engineer</span>":"@running<span>ingegnere</span>";
+  document.querySelectorAll("[data-"+l+"]").forEach(e=>{ const v=e.getAttribute("data-"+l); if(v) e.textContent=v; });
   buildAll();
 }
-
-function buildAll(){
-  buildBbar();
-  updateCheat(curBkt);
-  buildCharts();
+function showTab(btn,id){
+  document.querySelectorAll(".tp").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".tn").forEach(b=>b.classList.remove("active"));
+  el(id).classList.add("active"); btn.classList.add("active");
 }
 
 function buildBbar(){
-  const bar=document.getElementById("bbar"); bar.innerHTML="";
+  const bar=el("bbar"); bar.innerHTML="";
   bkts().forEach(b=>{
     const btn=document.createElement("button");
-    btn.className="bbt"+(b===curBkt?" active":"");
-    btn.textContent=b; btn.dataset.b=b;
-    btn.onclick=()=>updateCheat(b);
-    bar.appendChild(btn);
+    btn.className="bbt"+(b===curBkt?" active":""); btn.textContent=b; btn.dataset.b=b;
+    btn.onclick=()=>updateBkt(b); bar.appendChild(btn);
   });
 }
 
-function updateCheat(b){
+function updateBkt(b){
   curBkt=b;
   document.querySelectorAll(".bbt").forEach(bt=>bt.classList.toggle("active",bt.dataset.b===b));
-  const d=D()[b]; if(!d) return;
+  const r=D()[b]; if(!r) return;
 
-  // Update runner count
-  document.getElementById("rcn").textContent=d.n.toLocaleString();
-  const rcl=document.getElementById("rcl");
-  rcl.textContent=lang==="en"?"runners in this bucket (2023+2025)":"runner in questa fascia (2023+2025)";
+  el("rcn").textContent=r.n.toLocaleString();
+  el("rcRm").textContent="("+r.pctRm+"% outliers removed)";
+  el("rclbl").textContent=lang==="en"?"runners in this bucket":"runner in questa fascia";
 
-  const t10=Math.round(d.p1*10), t25=t10+Math.round(d.p2*15), t35=t25+Math.round(d.p3*10), fin=Math.round(d.po*42.195);
+  // Group cards
+  const gDefs=[{key:"ex",cls:"ex",en:"Executed",it:"Eseguito"},{key:"fa",cls:"fa",en:"Faded",it:"Calato"},{key:"bl",cls:"bl",en:"Blowup",it:"Esploso"}];
+  const pcts=[r.gpEx,r.gpFa,r.gpBl];
+  el("gCards").innerHTML=gDefs.map((g,i)=>{
+    const gr=r[g.key];
+    return `<div class="gc ${g.cls}">
+      <div class="gc-tag ${g.cls}">${lang==="en"?g.en:g.it}</div>
+      <div class="gc-pct ${g.cls}">${pcts[i].toFixed(0)}%</div>
+      <div style="font-size:.78rem;color:var(--mu);line-height:1.7">
+        <div>${lang==="en"?"Pos. split:":"Pos. split:"} <strong style="color:var(--tx)">${fmtPS(gr.ps)}</strong></div>
+        <div>Seg.1 vs ideal: <strong style="color:${gr.d1>0?"#f39c12":gr.d1<-4?"#e74c3c":"#2ecc71"}">${(gr.d1>=0?"+":"")+adj(gr.d1).toFixed(1)}s${pu()}</strong></div>
+        <div>Seg.4 vs ideal: <strong style="color:${gr.d4>10?"#e74c3c":gr.d4>3?"#f39c12":"#2ecc71"}">${(gr.d4>=0?"+":"")+adj(gr.d4).toFixed(1)}s${pu()}</strong></div>
+      </div></div>`;
+  }).join("");
 
-  document.getElementById("sRow").innerHTML=[
-    {l:lang==="en"?"Avg pace":"Passo medio", v:fmtPace(d.po)+pu(), c:"var(--tx)"},
-    {l:lang==="en"?"1st half":"1a metà", v:fmtT(d.h1), c:"#2ecc71"},
-    {l:lang==="en"?"2nd half":"2a metà", v:fmtT(d.h2), c:"#e74c3c"},
-    {l:lang==="en"?"Positive split":"Positive split", v:"+"+fmtT(d.ps), c:gender==="F"?"var(--wc)":"var(--ac)"},
-  ].map(m=>`<div class="sb2"><div class="val" style="color:${m.c}">${m.v}</div><div class="lbl2">${m.l}</div></div>`).join("");
+  // Note
+  const noteEl=el("noteText");
+  if(noteEl) noteEl.innerHTML=(lang==="en"?(NOTES_EN[b]||""):(NOTES_IT[b]||NOTES_EN[b]||""));
 
-  const cpK_en=["10 km / 6.2 mi","Half","25 km","35 km","Finish"];
-  const cpK_it=["10 km","Mezza","25 km","35 km","Arrivo"];
-  const cpS_en=["end downhill","halfway","Newton start","hilltop","Boylston"];
-  const cpS_it=["fine discesa","mezza","inizio Newton","cima colline","Boylston"];
-  [t10,d.h1,t25,t35,fin].forEach((t,i)=>{
-    const cpK=lang==="en"?cpK_en:cpK_it, cpS=lang==="en"?cpS_en:cpS_it;
-    document.getElementById("cpg").innerHTML=[t10,d.h1,t25,t35,fin].map((tt,ii)=>
-      `<div class="cp"><div class="cpk">${(lang==="en"?cpK_en:cpK_it)[ii]}</div><div class="cpt">${fmtT(tt)}</div><div class="cps">${(lang==="en"?cpS_en:cpS_it)[ii]}</div></div>`
-    ).join("");
-  });
+  const segL=sn();
+  const mult=units==="imperial"?1.60934:1.0;
+  const ip=[r.ip1,r.ip2,r.ip3,r.ip4];
+  const exP=[r.ex.p1,r.ex.p2,r.ex.p3,r.ex.p4];
+  const faP=[r.fa.p1,r.fa.p2,r.fa.p3,r.fa.p4];
+  const blP=[r.bl.p1,r.bl.p2,r.bl.p3,r.bl.p4];
 
-  const elev=units==="imperial"?SEG_ELEV_I:SEG_ELEV_M;
-  const km=units==="imperial"?SEG_MI:(lang==="en"?SEG_KM_EN:SEG_KM_IT);
-  document.getElementById("stbl").innerHTML=
-    `<thead><tr><th>${lang==="en"?"Segment":"Segmento"}</th><th>${lang==="en"?"Dist.":"Dist."}</th><th>${lang==="en"?"Target pace":"Passo"}</th><th>vs avg</th><th>${units==="imperial"?"sec/mi":"sec/km"}</th></tr></thead><tbody>`+
-    SEGS.map((s,i)=>`<tr><td><span class="dot" style="background:${s.col}"></span>${lang==="en"?s.en:s.it}</td>
-      <td style="font-size:.8rem;color:var(--mu)">${km[i]} <span style="color:var(--mu2)">${elev[i]}</span></td>
-      <td style="font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700">${fmtPace(d[s.pk])}${pu()}</td>
-      <td class="${d[s.dk]>0?"pos":"neg"}">${d[s.dk]>0?"+":""}${d[s.dk].toFixed(2)}%</td>
-      <td class="${d[s.sk]>0?"pos":"neg"}">${fmtS(d[s.sk])}</td></tr>`).join("")+"</tbody>";
+  // ── Strategy tab ────────────────────────────────────────────────────────
+  const halfOv=Math.round(r.po*21.0975);
+  const t10=Math.round(r.po*10), t25=t10+Math.round(r.po*15), t35=t25+Math.round(r.po*10), fin=Math.round(r.po*42.195);
+  const cpL=lang==="en"?["10 KM","HALF","25 KM","35 KM","FINISH"]:["10 KM","MEZZA","25 KM","35 KM","ARRIVO"];
+  const cpS=lang==="en"?["end downhill","halfway","Newton start","hilltop","Boylston"]:["fine discesa","mezza","inizio Newton","cima colline","Boylston"];
+  const sRow=el("sRowStrat");
+  if(sRow) sRow.innerHTML=[
+    {l:lang==="en"?"Avg pace":"Passo medio",v:fmtP(r.po)+pu(),c:"var(--tx)"},
+    {l:lang==="en"?"1st half":"1a metà",v:fmtT(halfOv),c:"#2ecc71"},
+    {l:lang==="en"?"2nd half":"2a metà",v:fmtT(fin-halfOv),c:"#e74c3c"},
+    {l:lang==="en"?"Pos. split":"Pos. split",v:fmtPS(r.overall?r.overall.ps:0),c:"#FF5C28"},
+  ].map(m=>`<div class="sb"><div class="val" style="color:${m.c}">${m.v}</div><div class="lbl2">${m.l}</div></div>`).join("");
 
-  document.getElementById("cnote").querySelector("span:last-child").textContent=notes(b);
+  const cpg=el("cpgStrat");
+  if(cpg) cpg.innerHTML=[t10,halfOv,t25,t35,fin].map((t,i)=>
+    `<div class="cp"><div class="cpk">${cpL[i]}</div><div class="cpt">${fmtT(t)}</div><div class="cps">${cpS[i]}</div></div>`
+  ).join("");
 
-  if(charts.radar) charts.radar.destroy();
-  charts.radar=new Chart(document.getElementById("radarC"),{type:"radar",
-    data:{labels:lang==="en"?["Seg.1\nDownhill","Seg.2\nFlat","Seg.3\nNewton","Seg.4\nFinale"]:["Seg.1\nDiscesa","Seg.2\nPiatta","Seg.3\nNewton","Seg.4\nFinale"],
-      datasets:[{data:[d.d1,d.d2,d.d3,d.d4],fill:true,backgroundColor:`rgba(${gender==="F"?"233,30,140":"255,92,40"},.12)`,borderColor:gender==="F"?"var(--wc)":"var(--ac)",borderWidth:2,pointBackgroundColor:["#2ecc71","#3498db","#e74c3c","#f39c12"],pointRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{r:{grid:{color:"rgba(255,255,255,.07)"},angleLines:{color:"rgba(255,255,255,.07)"},
-        ticks:{color:"#333",backdropColor:"transparent",callback:v=>v+"%",font:{size:10}},
-        pointLabels:{color:"#666",font:{family:"'Barlow Condensed'",size:10,weight:"700"}},min:-12,max:12}}}});
-}
+  const tbl=el("stratTable");
+  if(tbl){
+    const km=units==="imperial";
+    let th=`<thead><tr>
+      <th>${lang==="en"?"Segment":"Segmento"}</th>
+      <th>${lang==="en"?"Distance":"Distanza"}</th>
+      <th style="color:#3498db">${lang==="en"?"Ideal":"Ideale"}</th>
+      <th style="color:#2ecc71">${lang==="en"?"Executed":"Eseguito"}</th>
+      <th style="color:#f39c12">${lang==="en"?"Faded":"Calato"}</th>
+      <th style="color:#e74c3c">${lang==="en"?"Blowup":"Esploso"}</th>
+    </tr></thead><tbody>`;
+    SEG_META.forEach((seg,i)=>{
+      const ipv=ip[i]*mult, exv=exP[i]*mult, fav=faP[i]*mult, blv=blP[i]*mult;
+      const dd=(d)=>{ const dv=d*mult; return `<span class="delta" style="color:${dv>5?"#e74c3c":dv>1?"#f39c12":"#2ecc71"}">${dv>=0?"+":""}${dv.toFixed(1)}s</span>`; };
+      th+=`<tr>
+        <td><span class="seg-dot" style="background:${seg.col}"></span>${lang==="en"?seg.en:seg.it}</td>
+        <td style="font-size:.78rem;color:var(--mu)">${km?seg.km_i:seg.km_m}<br><span style="color:var(--mu2)">${km?seg.elev_i:seg.elev_m}</span></td>
+        <td><span class="group-pace" style="color:#3498db">${fmtP(ipv)}${pu()}</span></td>
+        <td><span class="group-pace" style="color:#2ecc71">${fmtP(exv)}${pu()}</span>${dd(r.ex["d"+(i+1)])}</td>
+        <td><span class="group-pace" style="color:#f39c12">${fmtP(fav)}${pu()}</span>${dd(r.fa["d"+(i+1)])}</td>
+        <td><span class="group-pace" style="color:#e74c3c">${fmtP(blv)}${pu()}</span>${dd(r.bl["d"+(i+1)])}</td>
+      </tr>`;
+    });
+    tbl.innerHTML=th+"</tbody>";
+  }
 
-function destroyChart(k){ if(charts[k]){charts[k].destroy();charts[k]=null;} }
+  dc("radarStrat");
+  const radarEl=el("radarStrat");
+  if(radarEl){
+    const rL=["Seg.1","Seg.2","Seg.3","Seg.4"];
+    CH.radarStrat=new Chart(radarEl,{type:"radar",
+      data:{labels:rL,datasets:[
+        {data:[r.ip1,r.ip2,r.ip3,r.ip4].map(v=>(v-r.po)/r.po*100),fill:false,borderColor:"rgba(52,152,219,.7)",borderWidth:1.5,borderDash:[5,3],pointRadius:3},
+        {data:[r.ex.d1,r.ex.d2,r.ex.d3,r.ex.d4],fill:true,backgroundColor:"rgba(46,204,113,.1)",borderColor:"#2ecc71",borderWidth:2,pointRadius:4},
+        {data:[r.bl.d1,r.bl.d2,r.bl.d3,r.bl.d4],fill:true,backgroundColor:"rgba(231,76,60,.08)",borderColor:"#e74c3c",borderWidth:1.5,pointRadius:3},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{r:{grid:{color:"rgba(255,255,255,.08)"},angleLines:{color:"rgba(255,255,255,.08)"},
+          ticks:{color:"#333",backdropColor:"transparent",callback:v=>v+"%",font:{size:9}},
+          pointLabels:{color:"#666",font:{family:"Barlow Condensed",size:10,weight:"700"}},min:-12,max:12}}}});
+  }
 
-function buildCharts(){
-  const D2=D(), BC2=BC(), bk=bkts();
-  const segL=lang==="en"?["Seg.1\nDownhill","Seg.2\nFlat","Seg.3\nNewton","Seg.4\nFinale"]:["Seg.1\nDiscesa","Seg.2\nPiatta","Seg.3\nNewton","Seg.4\nFinale"];
-  const secMult=units==="imperial"?1.60934:1.0;
-  const gc="#555"; const gr="rgba(255,255,255,.04)";
-
-  // Legend
-  const leg=document.getElementById("legMain"); leg.innerHTML="";
-  bk.forEach(b=>{leg.innerHTML+=`<span class="li"><span class="ld" style="background:${BC2[b]}"></span>${b} (${D2[b].n})</span>`;});
-
-  destroyChart("dev");
-  charts.dev=new Chart(document.getElementById("devC"),{type:"bar",
-    data:{labels:segL,datasets:bk.map(b=>({label:b,data:[D2[b].d1,D2[b].d2,D2[b].d3,D2[b].d4],backgroundColor:BC2[b],borderWidth:0,borderRadius:2}))},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{grid:{color:gr},ticks:{color:gc,font:{size:10},maxRotation:0}},
-        y:{grid:{color:gr},min:-13,max:15,ticks:{color:gc,callback:v=>v+"%",font:{size:10}}}}}});
-
-  destroyChart("sec");
-  charts.sec=new Chart(document.getElementById("secC"),{type:"bar",
-    data:{labels:segL,datasets:bk.map(b=>({label:b,data:[D2[b].s1,D2[b].s2,D2[b].s3,D2[b].s4].map(v=>+(v*secMult).toFixed(1)),backgroundColor:BC2[b],borderWidth:0,borderRadius:2}))},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{grid:{color:gr},ticks:{color:gc,font:{size:10},maxRotation:0}},
-        y:{grid:{color:gr},min:-(55*secMult),max:(55*secMult),ticks:{color:gc,callback:v=>(v>=0?"+":"")+v.toFixed(0)+"s",font:{size:10}}}}}});
-
-  destroyChart("ps");
-  charts.ps=new Chart(document.getElementById("psC"),{type:"bar",
-    data:{labels:bk,datasets:[{data:bk.map(b=>+(D2[b].ps/60).toFixed(1)),backgroundColor:bk.map(b=>BC2[b]),borderWidth:0,borderRadius:3}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{grid:{color:gr},ticks:{color:gc,font:{size:9},maxRotation:45}},
-        y:{grid:{color:gr},min:0,ticks:{color:gc,callback:v=>v+" min",font:{size:10}}}}}});
-
-  destroyChart("neg");
-  charts.neg=new Chart(document.getElementById("negC"),{type:"bar",
-    data:{labels:bk,datasets:[{data:bk.map(b=>+D2[b].neg.toFixed(1)),backgroundColor:bk.map(b=>BC2[b]),borderWidth:0,borderRadius:3}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{grid:{color:gr},ticks:{color:gc,font:{size:9},maxRotation:45}},
-        y:{grid:{color:gr},min:0,max:30,ticks:{color:gc,callback:v=>v+"%",font:{size:10}}}}}});
-
-  destroyChart("age");
-  const ageGroups=[["18-29","#7F77DD"],["30-39","#3498db"],["40-49","#2ecc71"],["50-59","#f39c12"],["60+","#888"]];
-  charts.age=new Chart(document.getElementById("ageC"),{type:"bar",
-    data:{labels:bk,datasets:ageGroups.map(([ag,col])=>({label:ag,data:bk.map(b=>{const v=D2[b].age?D2[b].age[ag]:null;return v==null?null:+v.toFixed(2);}),backgroundColor:col,borderWidth:0,borderRadius:2,spanGaps:false}))},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{grid:{color:gr},ticks:{color:gc,font:{size:9},maxRotation:45}},
-        y:{grid:{color:gr},min:0,ticks:{color:gc,callback:v=>"+"+v+"%",font:{size:10}}}}}});
-
-  destroyChart("g");
-  const mBk=["2:40","2:45","2:50","2:55","3:00"],wBk=["3:00","3:05","3:10","3:15","3:30"];
-  const lblsG=["2:40M/3:00W","2:45M/3:05W","2:50M/3:10W","2:55M/3:15W","3:00M/3:30W"];
-  charts.g=new Chart(document.getElementById("gC"),{type:"bar",
-    data:{labels:lblsG,datasets:[
-      {label:lang==="en"?"Men":"Uomini",data:mBk.map(b=>MEN[b]?+MEN[b].d4.toFixed(2):null),backgroundColor:"#3498db",borderWidth:0,borderRadius:3},
-      {label:lang==="en"?"Women":"Donne",data:wBk.map(b=>WOMEN[b]?+WOMEN[b].d4.toFixed(2):null),backgroundColor:"#e91e8c",borderWidth:0,borderRadius:3},
+  // ── Tab t1: delta + line ──────────────────────────────────────────────────
+  dc("deltaC");
+  CH.deltaC=new Chart(el("deltaC")||document.createElement("canvas"),{type:"bar",
+    data:{labels:segL,datasets:[
+      {label:"Executed",data:[r.ex.d1,r.ex.d2,r.ex.d3,r.ex.d4].map(v=>+(v*mult).toFixed(1)),backgroundColor:"#2ecc71",borderWidth:0,borderRadius:3},
+      {label:"Faded",   data:[r.fa.d1,r.fa.d2,r.fa.d3,r.fa.d4].map(v=>+(v*mult).toFixed(1)),backgroundColor:"#f39c12",borderWidth:0,borderRadius:3},
+      {label:"Blowup",  data:[r.bl.d1,r.bl.d2,r.bl.d3,r.bl.d4].map(v=>+(v*mult).toFixed(1)),backgroundColor:"#e74c3c",borderWidth:0,borderRadius:3},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{grid:{color:gr},ticks:{color:gc,font:{size:10}}},
-        y:{grid:{color:gr},min:0,ticks:{color:gc,callback:v=>"+"+v+"%",font:{size:10}}}}}});
+      scales:{x:{grid:{color:GR},ticks:{color:GT,font:{size:10},maxRotation:0}},
+        y:{grid:{color:GR},ticks:{color:GT,callback:v=>(v>=0?"+":"")+v+"s",font:{size:10}}}}}});
 
-  // Insight numbers
-  const d0=D2[bk[0]], dL=D2[bk[bk.length-1]];
-  document.getElementById("i1n").textContent="+"+Math.round(d0.s4)+"s";
-  document.getElementById("i2n").textContent=(dL.ps/d0.ps).toFixed(0)+"×";
-  document.getElementById("i3n").textContent=Math.round(d0.neg)+"%";
+  dc("paceCompC");
+  CH.paceCompC=new Chart(el("paceCompC")||document.createElement("canvas"),{type:"line",
+    data:{labels:segL,datasets:[
+      {data:ip.map(v=>v*mult),borderColor:"rgba(52,152,219,.7)",borderWidth:2,borderDash:[6,3],pointRadius:4,fill:false,tension:0},
+      {data:exP.map(v=>v*mult),borderColor:"#2ecc71",borderWidth:2.5,pointRadius:4,fill:false,tension:0},
+      {data:faP.map(v=>v*mult),borderColor:"#f39c12",borderWidth:2,borderDash:[3,2],pointRadius:4,fill:false,tension:0},
+      {data:blP.map(v=>v*mult),borderColor:"#e74c3c",borderWidth:2.5,pointRadius:4,fill:false,tension:0},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:GR},ticks:{color:GT,font:{size:10},maxRotation:0}},
+        y:{reverse:true,grid:{color:GR},ticks:{color:GT,font:{size:10},callback:v=>{const s=Math.round(v);return Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60;}}}}}});
+
+  // ── Tab t2: abs pace ──────────────────────────────────────────────────────
+  dc("paceAbsC");
+  CH.paceAbsC=new Chart(el("paceAbsC")||document.createElement("canvas"),{type:"bar",
+    data:{labels:segL,datasets:[
+      {type:"line",data:ip.map(v=>v*mult),borderColor:"#3498db",borderWidth:2,borderDash:[5,3],pointRadius:5,fill:false,tension:0,order:0},
+      {data:exP.map(v=>v*mult),backgroundColor:"#2ecc71",borderWidth:0,borderRadius:2,order:1},
+      {data:faP.map(v=>v*mult),backgroundColor:"#f39c12",borderWidth:0,borderRadius:2,order:2},
+      {data:blP.map(v=>v*mult),backgroundColor:"#e74c3c",borderWidth:0,borderRadius:2,order:3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:GR},ticks:{color:GT,font:{size:10},maxRotation:0}},
+        y:{reverse:true,grid:{color:GR},ticks:{color:GT,font:{size:10},callback:v=>{const s=Math.round(v);return Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60;}}}}}});
+
+  // ── Tab t3: positive split by group ──────────────────────────────────────
+  dc("psGroupC");
+  CH.psGroupC=new Chart(el("psGroupC")||document.createElement("canvas"),{type:"bar",
+    data:{labels:lang==="en"?["Executed","Faded","Blowup"]:["Eseguito","Calato","Esploso"],
+      datasets:[{data:[r.ex.ps/60,r.fa.ps/60,r.bl.ps/60].map(v=>+v.toFixed(1)),
+        backgroundColor:["#2ecc71","#f39c12","#e74c3c"],borderWidth:0,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:GR},ticks:{color:GT}},
+        y:{grid:{color:GR},ticks:{color:GT,callback:v=>(v>=0?"+":"")+v.toFixed(1)+" min"}}}}});
 }
 
+function buildCharts(){
+  const bk=bkts(), D2=D(), BC2=BC();
+  const mult=units==="imperial"?1.60934:1.0;
+
+  dc("negC");
+  CH.negC=new Chart(el("negC"),{type:"bar",
+    data:{labels:bk,datasets:[{data:bk.map(b=>D2[b].negPct),backgroundColor:bk.map(b=>BC2[b]),borderWidth:0,borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:GR},ticks:{color:GT,font:{size:9},maxRotation:45}},
+        y:{grid:{color:GR},min:0,max:35,ticks:{color:GT,callback:v=>v+"%"}}}}});
+
+  dc("allBktC");
+  CH.allBktC=new Chart(el("allBktC"),{type:"bar",
+    data:{labels:bk,datasets:[
+      {data:bk.map(b=>+(D2[b].ex.d1*mult).toFixed(1)),backgroundColor:"#2ecc71",borderWidth:0,borderRadius:2},
+      {data:bk.map(b=>+(D2[b].fa.d1*mult).toFixed(1)),backgroundColor:"#f39c12",borderWidth:0,borderRadius:2},
+      {data:bk.map(b=>+(D2[b].bl.d1*mult).toFixed(1)),backgroundColor:"#e74c3c",borderWidth:0,borderRadius:2},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:GR},ticks:{color:GT,font:{size:9},maxRotation:45}},
+        y:{grid:{color:GR},ticks:{color:GT,callback:v=>(v>=0?"+":"")+v+"s"}}}}});
+
+  dc("allBktC2");
+  CH.allBktC2=new Chart(el("allBktC2"),{type:"bar",
+    data:{labels:bk,datasets:[
+      {data:bk.map(b=>+(D2[b].ex.d4*mult).toFixed(1)),backgroundColor:"#2ecc71",borderWidth:0,borderRadius:2},
+      {data:bk.map(b=>+(D2[b].fa.d4*mult).toFixed(1)),backgroundColor:"#f39c12",borderWidth:0,borderRadius:2},
+      {data:bk.map(b=>+(D2[b].bl.d4*mult).toFixed(1)),backgroundColor:"#e74c3c",borderWidth:0,borderRadius:2},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:GR},ticks:{color:GT,font:{size:9},maxRotation:45}},
+        y:{grid:{color:GR},ticks:{color:GT,callback:v=>(v>=0?"+":"")+v+"s"}}}}});
+
+  const legEl=el("legAll");
+  if(legEl){ legEl.innerHTML=""; [["Executed","#2ecc71"],["Faded","#f39c12"],["Blowup","#e74c3c"]].forEach(([l,c])=>{
+    legEl.innerHTML+=`<span class="li"><span class="ld" style="background:${c}"></span>${l}</span>`; }); }
+
+  updateBkt(curBkt);
+}
+
+function buildAll(){ buildBbar(); buildCharts(); }
 buildAll();
+
 </script>
 </body>
 </html>
